@@ -41,6 +41,14 @@ export function BalanceSection({
     setLocalOldType(oldType)
   }, [oldAmount, oldType])
 
+  // When first transaction status changes, initialize local values
+  useEffect(() => {
+    if (!isFirstTransaction && oldAmount > 0) {
+      setLocalOldAmount(oldAmount)
+      setLocalOldType(oldType)
+    }
+  }, [isFirstTransaction, oldAmount, oldType])
+
   useEffect(function computeTodayType() {
     if (paidAmount > totalAmount) {
       setTodayType('EXTRA')
@@ -52,15 +60,14 @@ export function BalanceSection({
   }, [paidAmount, totalAmount])
 
   useEffect(function computeFinal() {
-    const currentOldAmount = showOldInput ? localOldAmount : oldAmount
-    const currentOldType = showOldInput ? localOldType : oldType
+    // For first transaction, use local values (user input)
+    // For subsequent transactions, use props or edited values
+    const currentOldAmount = isFirstTransaction ? localOldAmount : (showOldInput ? localOldAmount : oldAmount)
+    const currentOldType = isFirstTransaction ? localOldType : (showOldInput ? localOldType : oldType)
     
-    if (!isFirstTransaction) {
-      const result = calcFinal(todayType, todayAmount, currentOldType, currentOldAmount)
-      onFinalChange(result.finalType, result.finalAmount)
-    } else {
-      onFinalChange(todayType, todayAmount)
-    }
+    // Always use calcFinal for all transactions
+    const result = calcFinal(todayType, todayAmount, currentOldType, currentOldAmount)
+    onFinalChange(result.finalType, result.finalAmount)
   }, [todayType, todayAmount, localOldAmount, localOldType, oldAmount, oldType, isFirstTransaction, onFinalChange, showOldInput])
 
   const handlePaidChange = (value: number) => {
@@ -70,6 +77,16 @@ export function BalanceSection({
 
   const handleOldAmountChange = (value: number) => {
     setLocalOldAmount(value)
+    if (isFirstTransaction) {
+      onOldAmountChange(value)
+    }
+  }
+
+  const handleOldTypeChange = (type: DiffType) => {
+    setLocalOldType(type)
+    if (isFirstTransaction) {
+      onOldTypeChange(type)
+    }
   }
 
   const handleSaveOldAmount = () => {
@@ -213,22 +230,14 @@ export function BalanceSection({
             <div className="flex rounded-lg overflow-hidden border border-slate-600">
               <button
                 type="button"
-                onClick={() => {
-                  const newType: DiffType = 'BALANCE'
-                  setLocalOldType(newType)
-                  onOldTypeChange(newType)
-                }}
+                onClick={() => handleOldTypeChange('BALANCE')}
                 className={`px-4 py-2.5 text-sm font-medium transition-colors ${localOldType === 'BALANCE' ? 'bg-green-600 text-white' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`}
               >
                 Balance
               </button>
               <button
                 type="button"
-                onClick={() => {
-                  const newType: DiffType = 'EXTRA'
-                  setLocalOldType(newType)
-                  onOldTypeChange(newType)
-                }}
+                onClick={() => handleOldTypeChange('EXTRA')}
                 className={`px-4 py-2.5 text-sm font-medium transition-colors ${localOldType === 'EXTRA' ? 'bg-red-600 text-white' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`}
               >
                 Extra
