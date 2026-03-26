@@ -116,11 +116,9 @@ ${henTypeLabel}
       if (hasKFreeHen) content += `Free Hens: ${transaction.kFreeHen}\n`
       content += `Total Hens: ${transaction.kTotalHens}
 Rate: Rs.${transaction.kRate}
-Amount: ${formatCurrency(transaction.kAmount || 0)} | Labour: ${formatCurrency(transaction.kLabour || 0)}
+Amount: ${formatCurrency(transaction.kAmount || 0)}
+Labour: ${formatCurrency(transaction.kLabour || 0)}
 Total Amount: ${formatCurrency(transaction.kTotal || 0)}
-Paid: ${formatCurrency(transaction.paidAmount)}
-${transaction.todayType === 'BALANCE' ? 'Balance' : 'Extra'}: ${formatCurrency(transaction.todayAmount)}
-Old ${transaction.oldType}: ${formatCurrency(transaction.oldAmount)}
 ==============================
 
 
@@ -136,11 +134,8 @@ Net Weight: ${transaction.nNetWeight} Kg
 Water Weight: ${transaction.nWaterWeight} Kg
 Weight: ${transaction.nWeight} Kg
 Rate: Rs.${transaction.nRate}
-Amount: ${formatCurrency(transaction.nAmount || 0)} | Labour: ${formatCurrency(transaction.nLabour || 0)}
+Amount: ${formatCurrency(transaction.nAmount || 0)}
 Total Amount: ${formatCurrency(transaction.totalAmount)}
-Paid: ${formatCurrency(transaction.paidAmount)}
-${transaction.todayType === 'BALANCE' ? 'Balance' : 'Extra'}: ${formatCurrency(transaction.todayAmount)}
-Old ${transaction.oldType}: ${formatCurrency(transaction.oldAmount)}
 ==============================
 
 
@@ -154,7 +149,8 @@ Old ${transaction.oldType}: ${formatCurrency(transaction.oldAmount)}
       if (hasKFreeHen) content += `Free Hens: ${transaction.kFreeHen}\n`
       content += `Total Hens: ${transaction.kTotalHens}
 Rate: Rs.${transaction.kRate}
-Amount: ${formatCurrency(transaction.kAmount || 0)} | Labour: ${formatCurrency(transaction.kLabour || 0)}
+Amount: ${formatCurrency(transaction.kAmount || 0)}
+Labour: ${formatCurrency(transaction.kLabour || 0)}
 Katti Total: ${formatCurrency(transaction.kTotal || 0)}
 
 NALLA KOLI\n`
@@ -166,7 +162,7 @@ Net Weight: ${transaction.nNetWeight} Kg
 Water Weight: ${transaction.nWaterWeight} Kg
 Weight: ${transaction.nWeight} Kg
 Rate: Rs.${transaction.nRate}
-Amount: ${formatCurrency(transaction.nAmount || 0)} | Labour: ${formatCurrency(transaction.nLabour || 0)}
+Amount: ${formatCurrency(transaction.nAmount || 0)}
 ==============================
 
 Total Amount: ${formatCurrency(transaction.totalAmount)}
@@ -212,19 +208,13 @@ Old ${transaction.oldType}: ${formatCurrency(transaction.oldAmount)}
           Rate: Rs.{transaction.kRate}
         </div>
         <div className="text-black font-semibold">
-          Amount: {formatCurrency(transaction.kAmount || 0)} | Labour: {formatCurrency(transaction.kLabour || 0)}
+          Amount: {formatCurrency(transaction.kAmount || 0)}
+        </div>
+        <div className="text-black font-semibold">
+          Labour: {formatCurrency(transaction.kLabour || 0)}
         </div>
         <div className="text-black font-bold border-t pt-2">
           Total Amount: {formatCurrency(transaction.kTotal || 0)}
-        </div>
-        <div className="text-black font-semibold">
-          Paid: {formatCurrency(transaction.paidAmount)}
-        </div>
-        <div className="text-black font-semibold">
-          {transaction.todayType === 'BALANCE' ? 'Balance' : 'Extra'}: {formatCurrency(transaction.todayAmount)}
-        </div>
-        <div className="text-black font-semibold">
-          Old {transaction.oldType}: {formatCurrency(transaction.oldAmount)}
         </div>
       </div>
     )
@@ -260,19 +250,10 @@ Old ${transaction.oldType}: ${formatCurrency(transaction.oldAmount)}
           Rate: Rs.{transaction.nRate}
         </div>
         <div className="text-black font-semibold">
-          Amount: {formatCurrency(transaction.nAmount || 0)} | Labour: {formatCurrency(transaction.nLabour || 0)}
+          Amount: {formatCurrency(transaction.nAmount || 0)}
         </div>
         <div className="text-black font-bold border-t pt-2">
           Total Amount: {formatCurrency(transaction.totalAmount)}
-        </div>
-        <div className="text-black font-semibold">
-          Paid: {formatCurrency(transaction.paidAmount)}
-        </div>
-        <div className="text-black font-semibold">
-          {transaction.todayType === 'BALANCE' ? 'Balance' : 'Extra'}: {formatCurrency(transaction.todayAmount)}
-        </div>
-        <div className="text-black font-semibold">
-          Old {transaction.oldType}: {formatCurrency(transaction.oldAmount)}
         </div>
       </div>
     )
