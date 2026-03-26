@@ -102,6 +102,31 @@ export function BillDialog({ transaction, open, onClose }: BillDialogProps) {
     return rows
   }
 
+  const renderPaymentSummary = () => (
+    <div className="space-y-2 text-sm">
+      <div className="text-black font-semibold">
+        Paid: {formatCurrency(transaction.paidAmount)}
+      </div>
+      <div className="text-black font-semibold">
+        {transaction.todayType === 'BALANCE' ? 'Today Balance' : 'Today Extra'}: {formatCurrency(transaction.todayAmount)}
+      </div>
+      <div className="text-black font-semibold">
+        Old {transaction.oldType}: {formatCurrency(transaction.oldAmount)}
+      </div>
+    </div>
+  )
+
+  const renderFinal = () => (
+    <div className="border-t-2 border-black pt-4 mt-4">
+      <div className="flex justify-between font-bold text-lg">
+        <span className="text-black">Final {transaction.finalType}:</span>
+        <span className={transaction.finalType === 'BALANCE' ? 'text-green-700 font-bold' : 'text-red-600 font-bold'}>
+          {formatCurrency(transaction.finalAmount)}
+        </span>
+      </div>
+    </div>
+  )
+
   const handleShare = () => {
     let content = `Balamurugan Traders
 Date: ${format(new Date(transaction.date), 'dd/MM/yyyy')}
@@ -119,6 +144,10 @@ Rate: Rs.${transaction.kRate}
 Amount: ${formatCurrency(transaction.kAmount || 0)}
 Labour: ${formatCurrency(transaction.kLabour || 0)}
 Total Amount: ${formatCurrency(transaction.kTotal || 0)}
+------------------------------
+Paid: ${formatCurrency(transaction.paidAmount)}
+${transaction.todayType === 'BALANCE' ? 'Today Balance' : 'Today Extra'}: ${formatCurrency(transaction.todayAmount)}
+Old ${transaction.oldType}: ${formatCurrency(transaction.oldAmount)}
 ==============================
 
 
@@ -136,6 +165,10 @@ Weight: ${transaction.nWeight} Kg
 Rate: Rs.${transaction.nRate}
 Amount: ${formatCurrency(transaction.nAmount || 0)}
 Total Amount: ${formatCurrency(transaction.totalAmount)}
+------------------------------
+Paid: ${formatCurrency(transaction.paidAmount)}
+${transaction.todayType === 'BALANCE' ? 'Today Balance' : 'Today Extra'}: ${formatCurrency(transaction.todayAmount)}
+Old ${transaction.oldType}: ${formatCurrency(transaction.oldAmount)}
 ==============================
 
 
@@ -167,7 +200,7 @@ Amount: ${formatCurrency(transaction.nAmount || 0)}
 
 Total Amount: ${formatCurrency(transaction.totalAmount)}
 Paid: ${formatCurrency(transaction.paidAmount)}
-${transaction.todayType === 'BALANCE' ? 'Balance' : 'Extra'}: ${formatCurrency(transaction.todayAmount)}
+${transaction.todayType === 'BALANCE' ? 'Today Balance' : 'Today Extra'}: ${formatCurrency(transaction.todayAmount)}
 Old ${transaction.oldType}: ${formatCurrency(transaction.oldAmount)}
 ==============================
 
@@ -269,9 +302,25 @@ Old ${transaction.oldType}: ${formatCurrency(transaction.oldAmount)}
             <p className="text-black font-medium">Date: {format(new Date(transaction.date), 'dd/MM/yyyy')}</p>
           </div>
 
-          {transaction.henType === 'KATTI_KOLI' && renderKattiBill()}
+          {transaction.henType === 'KATTI_KOLI' && (
+            <div className="space-y-4">
+              {renderKattiBill()}
+              <div className="border-t border-gray-300 pt-4 mt-4">
+                <h3 className="text-base font-bold text-black mb-2">PAYMENT SUMMARY</h3>
+                {renderPaymentSummary()}
+              </div>
+            </div>
+          )}
 
-          {transaction.henType === 'NALLA_KOLI' && renderNallaBill()}
+          {transaction.henType === 'NALLA_KOLI' && (
+            <div className="space-y-4">
+              {renderNallaBill()}
+              <div className="border-t border-gray-300 pt-4 mt-4">
+                <h3 className="text-base font-bold text-black mb-2">PAYMENT SUMMARY</h3>
+                {renderPaymentSummary()}
+              </div>
+            </div>
+          )}
 
           {transaction.henType === 'BOTH' && (
             <div className="space-y-4">
@@ -284,17 +333,15 @@ Old ${transaction.oldType}: ${formatCurrency(transaction.oldAmount)}
                 <h2 className="text-lg font-bold border-b pb-2 mb-3 text-black">NALLA KOLI</h2>
                 {renderNallaBill()}
               </div>
+
+              <div className="border-t border-gray-300 pt-4 mt-4">
+                <h3 className="text-base font-bold text-black mb-2">PAYMENT SUMMARY</h3>
+                {renderPaymentSummary()}
+              </div>
             </div>
           )}
 
-          <div className="border-t-2 border-black pt-4 mt-6">
-            <div className="flex justify-between font-bold text-lg">
-              <span className="text-black">Final {transaction.finalType}:</span>
-              <span className={transaction.finalType === 'BALANCE' ? 'text-green-700 font-bold' : 'text-red-600 font-bold'}>
-                {formatCurrency(transaction.finalAmount)}
-              </span>
-            </div>
-          </div>
+          {renderFinal()}
         </div>
 
         <div className="flex gap-2 p-6 border-t border-gray-200 bg-gray-50">
