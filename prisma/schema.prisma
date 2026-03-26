@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  username  String   @unique
+  password  String
+  createdAt DateTime @default(now())
+}
+
+model Transaction {
+  id        String   @id @default(cuid())
+  date      DateTime @default(now())
+  henType   HenType
+
+  // --- Katti Koli fields (used for HenType KATTI_KOLI and BOTH) ---
+  kBox1      Int?
+  kHen1      Int?
+  kBox2      Int?
+  kHen2      Int?
+  kTotalHens Int?
+  kRate      Float?
+  kAmount    Float?
+  kLabour    Float?
+  kTotal     Float?
+
+  // --- Nalla Koli fields (used for HenType NALLA_KOLI and BOTH) ---
+  nBox1        Int?
+  nHen1        Int?
+  nBox2        Int?
+  nHen2        Int?
+  nTotalHens   Int?
+  nNetWeight   Float?
+  nWaterWeight Float?
+  nWeight      Float?
+  nRate        Float?
+  nAmount      Float?
+  nLabour      Float?
+
+  // --- Combined totals ---
+  totalAmount   Float
+  paidAmount    Float
+
+  todayAmount   Float
+  todayType     DiffType
+
+  oldAmount     Float
+  oldType       DiffType
+
+  finalAmount   Float
+  finalType     DiffType
+
+  createdAt DateTime @default(now())
+
+  @@index([date])
+}
+
+enum HenType {
+  KATTI_KOLI
+  NALLA_KOLI
+  BOTH
+}
+
+enum DiffType {
+  BALANCE
+  EXTRA
+}
