@@ -1,9 +1,9 @@
 'use client'
 
-
 import { format } from 'date-fns'
 import { Button } from '@/components/ui/button'
 import { formatCurrency, type DiffType } from '@/lib/calculations'
+import { Printer, Share2, X } from 'lucide-react'
 
 interface Transaction {
   id: string
@@ -58,11 +58,11 @@ export function BillDialog({ transaction, open, onClose }: BillDialogProps) {
     return `${box} Box x ${hen} Hen = ${(box || 0) * (hen || 0)}`
   }
 
-  const getBillContent = () => {
+  const handleShare = () => {
     let content = `Balamurugan Traders
 Date: ${format(new Date(transaction.date), 'dd/MM/yyyy')}
 ${henTypeLabel}
-===============================
+==============================
 
 `
 
@@ -75,7 +75,8 @@ Total Amount: ${formatCurrency(transaction.kTotal || 0)}
 Paid: ${formatCurrency(transaction.paidAmount)}
 ${transaction.todayType === 'BALANCE' ? 'Balance' : 'Extra'}: ${formatCurrency(transaction.todayAmount)}
 Old ${transaction.oldType}: ${formatCurrency(transaction.oldAmount)}
-===============================
+==============================
+
 
 `
     }
@@ -92,7 +93,8 @@ Total Amount: ${formatCurrency(transaction.totalAmount)}
 Paid: ${formatCurrency(transaction.paidAmount)}
 ${transaction.todayType === 'BALANCE' ? 'Balance' : 'Extra'}: ${formatCurrency(transaction.todayAmount)}
 Old ${transaction.oldType}: ${formatCurrency(transaction.oldAmount)}
-===============================
+==============================
+
 
 `
     }
@@ -113,26 +115,22 @@ Water Weight: ${transaction.nWaterWeight} Kg
 Weight: ${transaction.nWeight} Kg
 Rate: Rs.${transaction.nRate}
 Amount: ${formatCurrency(transaction.nAmount || 0)} | Labour: ${formatCurrency(transaction.nLabour || 0)}
-===============================
+==============================
 
 Total Amount: ${formatCurrency(transaction.totalAmount)}
 Paid: ${formatCurrency(transaction.paidAmount)}
 ${transaction.todayType === 'BALANCE' ? 'Balance' : 'Extra'}: ${formatCurrency(transaction.todayAmount)}
 Old ${transaction.oldType}: ${formatCurrency(transaction.oldAmount)}
-===============================
+==============================
+
 
 `
     }
 
     content += `Final ${transaction.finalType}: ${formatCurrency(transaction.finalAmount)}`
 
-    return content
-  }
-
-  const handleShare = () => {
-    const billContent = getBillContent()
     const textarea = document.createElement('textarea')
-    textarea.value = billContent
+    textarea.value = content
     document.body.appendChild(textarea)
     textarea.select()
     document.execCommand('copy')
@@ -142,8 +140,8 @@ Old ${transaction.oldType}: ${formatCurrency(transaction.oldAmount)}
   }
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg max-w-xl w-full max-h-[90vh] overflow-y-auto border-2 border-black">
+    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg max-w-xl w-full max-h-[90vh] overflow-y-auto">
         <div className="p-6" id="bill-content">
           <div className="text-center border-b-2 border-black pb-4 mb-6">
             <h1 className="text-2xl font-bold text-black">Balamurugan Traders</h1>
@@ -295,24 +293,27 @@ Old ${transaction.oldType}: ${formatCurrency(transaction.oldAmount)}
           </div>
         </div>
 
-        <div className="flex gap-2 p-6 border-t border-black">
+        <div className="flex gap-2 p-6 border-t border-gray-200 bg-gray-50">
           <Button 
             onClick={() => window.print()} 
             className="flex-1 bg-black text-white hover:bg-gray-800"
           >
+            <Printer className="w-4 h-4 mr-2" />
             Print
           </Button>
           <Button 
             onClick={handleShare} 
             className="flex-1 bg-blue-600 text-white hover:bg-blue-700"
           >
+            <Share2 className="w-4 h-4 mr-2" />
             Share
           </Button>
           <Button 
             variant="outline" 
             onClick={onClose} 
-            className="flex-1 border-black text-black hover:bg-gray-100"
+            className="flex-1 border-gray-300 text-gray-700 hover:bg-gray-100"
           >
+            <X className="w-4 h-4 mr-2" />
             Close
           </Button>
         </div>

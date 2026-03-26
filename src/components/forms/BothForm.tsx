@@ -17,7 +17,6 @@ interface BothFormProps {
 
 export interface BothFormData {
   henType: 'BOTH'
-  // Katti Koli
   kBox1: number
   kHen1: number
   kBox2: number
@@ -27,7 +26,6 @@ export interface BothFormData {
   kAmount: number
   kLabour: number
   kTotal: number
-  // Nalla Koli
   nBox1: number
   nHen1: number
   nBox2: number
@@ -38,7 +36,6 @@ export interface BothFormData {
   nWeight: number
   nRate: number
   nAmount: number
-  // Combined
   totalAmount: number
   paidAmount: number
   todayType: DiffType
@@ -50,7 +47,6 @@ export interface BothFormData {
 }
 
 export function BothForm({ onSubmit, lastRates, initialOldAmount = 0, initialOldType = 'BALANCE', isFirstTransaction = false }: BothFormProps) {
-  // Katti Koli fields
   const [kBox1, setKBox1] = useState(0)
   const [kHen1, setKHen1] = useState(0)
   const [kBox2, setKBox2] = useState(0)
@@ -58,7 +54,6 @@ export function BothForm({ onSubmit, lastRates, initialOldAmount = 0, initialOld
   const [kRate, setKRate] = useState(lastRates?.kRate || 45)
   const [kLabour, setKLabour] = useState(1600)
   
-  // Nalla Koli fields
   const [nBox1, setNBox1] = useState(0)
   const [nHen1, setNHen1] = useState(0)
   const [nBox2, setNBox2] = useState(0)
@@ -67,33 +62,27 @@ export function BothForm({ onSubmit, lastRates, initialOldAmount = 0, initialOld
   const [nWaterWeight, setNWaterWeight] = useState(0)
   const [nRate, setNRate] = useState(lastRates?.nRate || 68)
   
-  // Balance fields
   const [paidAmount, setPaidAmount] = useState(0)
   const [oldAmount, setOldAmount] = useState(initialOldAmount)
   const [oldType, setOldType] = useState<DiffType>(initialOldType)
   const [finalType, setFinalType] = useState<DiffType>('BALANCE')
   const [finalAmount, setFinalAmount] = useState(0)
 
-  // Katti calculations
   const kTotalHens = kBox1 * kHen1 + kBox2 * kHen2
   const kAmount = kTotalHens * kRate
   const kTotal = kAmount + kLabour
 
-  // Nalla calculations
   const nTotalHens = nBox1 * nHen1 + nBox2 * nHen2
   const nWeight = nNetWeight - nWaterWeight
   const nAmount = nWeight * nRate
 
-  // Combined
   const totalAmount = kTotal + nAmount
 
-  // Sync old amount/type from props when they change
   useEffect(() => {
     setOldAmount(initialOldAmount)
     setOldType(initialOldType || 'BALANCE')
   }, [initialOldAmount, initialOldType])
 
-  // Sync rates from props when they change
   useEffect(() => {
     if (lastRates?.kRate) {
       setKRate(lastRates.kRate)
@@ -147,11 +136,10 @@ export function BothForm({ onSubmit, lastRates, initialOldAmount = 0, initialOld
   }
 
   return (
-    <div className="space-y-6">
-      {/* Katti Koli Section */}
-      <Card>
+    <div className="space-y-5">
+      <Card className="border-slate-700/50">
         <CardHeader>
-          <CardTitle className="text-xl text-center">
+          <CardTitle className="text-xl text-center text-orange-300">
             கட்டி கோழி / Katti Koli
           </CardTitle>
         </CardHeader>
@@ -159,66 +147,66 @@ export function BothForm({ onSubmit, lastRates, initialOldAmount = 0, initialOld
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>
-                Row 1 / வரிசை 1 <span className="text-black">(Box × Hen)</span>
+                Row 1 / வரிசை 1 <span className="text-slate-500">(Box × Hen)</span>
               </Label>
-              <div className="flex gap-2">
+              <div className="flex gap-2 items-center">
                 <Input
                   type="number"
                   value={kBox1 || ''}
                   onChange={(e) => setKBox1(Number(e.target.value) || 0)}
                   placeholder="Box"
-                  className="flex-1 text-black"
+                  className="flex-1"
                 />
-                <span className="flex items-center">×</span>
+                <span className="text-slate-500">×</span>
                 <Input
                   type="number"
                   value={kHen1 || ''}
                   onChange={(e) => setKHen1(Number(e.target.value) || 0)}
                   placeholder="Hen"
-                  className="flex-1 text-black"
+                  className="flex-1"
                 />
-                <span className="flex items-center text-black font-semibold min-w-[60px]">
+                <span className="flex items-center text-slate-200 font-semibold min-w-[60px]">
                   = {kBox1 * kHen1}
                 </span>
               </div>
             </div>
             <div className="space-y-2">
               <Label>
-                Row 2 / வரிசை 2 <span className="text-black">(Box × Hen)</span>
+                Row 2 / வரிசை 2 <span className="text-slate-500">(Box × Hen)</span>
               </Label>
-              <div className="flex gap-2">
+              <div className="flex gap-2 items-center">
                 <Input
                   type="number"
                   value={kBox2 || ''}
                   onChange={(e) => setKBox2(Number(e.target.value) || 0)}
                   placeholder="Box"
-                  className="flex-1 text-black"
+                  className="flex-1"
                 />
-                <span className="flex items-center">×</span>
+                <span className="text-slate-500">×</span>
                 <Input
                   type="number"
                   value={kHen2 || ''}
                   onChange={(e) => setKHen2(Number(e.target.value) || 0)}
                   placeholder="Hen"
-                  className="flex-1 text-black"
+                  className="flex-1"
                 />
-                <span className="flex items-center text-black font-semibold min-w-[60px]">
+                <span className="flex items-center text-slate-200 font-semibold min-w-[60px]">
                   = {kBox2 * kHen2}
                 </span>
               </div>
             </div>
           </div>
 
-          <div className="flex items-center justify-between p-3 bg-gray-100 rounded-md">
-            <Label className="text-base font-semibold text-black">
+          <div className="flex items-center justify-between p-3 bg-slate-800/50 rounded-lg">
+            <Label className="text-base font-semibold text-slate-200">
               Total Hens / மொத்த கோழிகள்
             </Label>
-            <span className="text-xl font-bold text-black">{kTotalHens}</span>
+            <span className="text-xl font-bold text-orange-400 font-mono">{kTotalHens}</span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
-              <Label className="text-black font-medium">Rate / விலை (₹)</Label>
+              <Label className="text-slate-300 font-medium">Rate / விலை (₹)</Label>
               <Input
                 type="number"
                 value={kRate || ''}
@@ -227,13 +215,13 @@ export function BothForm({ onSubmit, lastRates, initialOldAmount = 0, initialOld
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-black font-medium">Amount / தொகை (₹)</Label>
-              <div className="h-10 flex items-center text-black font-semibold">
+              <Label className="text-slate-300 font-medium">Amount / தொகை (₹)</Label>
+              <div className="h-11 flex items-center text-slate-200 font-semibold font-mono">
                 {formatCurrency(kAmount)}
               </div>
             </div>
             <div className="space-y-2">
-              <Label className="text-black font-medium">Labour / தொழிலாளர் (₹)</Label>
+              <Label className="text-slate-300 font-medium">Labour / தொழிலாளர் (₹)</Label>
               <Input
                 type="number"
                 value={kLabour || ''}
@@ -243,21 +231,20 @@ export function BothForm({ onSubmit, lastRates, initialOldAmount = 0, initialOld
             </div>
           </div>
 
-          <div className="flex items-center justify-between p-3 bg-gray-200 rounded-md">
-            <Label className="text-base font-semibold text-black">
+          <div className="flex items-center justify-between p-3 bg-slate-700/50 rounded-lg border border-slate-600/50">
+            <Label className="text-base font-semibold text-slate-100">
               Katti Total / கட்டி மொத்தம்
             </Label>
-            <span className="text-xl font-bold text-black">
+            <span className="text-xl font-bold text-orange-400 font-mono">
               {formatCurrency(kTotal)}
             </span>
           </div>
         </CardContent>
       </Card>
 
-      {/* Nalla Koli Section */}
-      <Card>
+      <Card className="border-slate-700/50">
         <CardHeader>
-          <CardTitle className="text-xl text-center">
+          <CardTitle className="text-xl text-center text-yellow-300">
             நல்ல கோழி / Nalla Koli
           </CardTitle>
         </CardHeader>
@@ -265,66 +252,66 @@ export function BothForm({ onSubmit, lastRates, initialOldAmount = 0, initialOld
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>
-                Row 1 / வரிசை 1 <span className="text-black">(Box × Hen)</span>
+                Row 1 / வரிசை 1 <span className="text-slate-500">(Box × Hen)</span>
               </Label>
-              <div className="flex gap-2">
+              <div className="flex gap-2 items-center">
                 <Input
                   type="number"
                   value={nBox1 || ''}
                   onChange={(e) => setNBox1(Number(e.target.value) || 0)}
                   placeholder="Box"
-                  className="flex-1 text-black"
+                  className="flex-1"
                 />
-                <span className="flex items-center">×</span>
+                <span className="text-slate-500">×</span>
                 <Input
                   type="number"
                   value={nHen1 || ''}
                   onChange={(e) => setNHen1(Number(e.target.value) || 0)}
                   placeholder="Hen"
-                  className="flex-1 text-black"
+                  className="flex-1"
                 />
-                <span className="flex items-center text-black font-semibold min-w-[60px]">
+                <span className="flex items-center text-slate-200 font-semibold min-w-[60px]">
                   = {nBox1 * nHen1}
                 </span>
               </div>
             </div>
             <div className="space-y-2">
               <Label>
-                Row 2 / வரிசை 2 <span className="text-black">(Box × Hen)</span>
+                Row 2 / வரிசை 2 <span className="text-slate-500">(Box × Hen)</span>
               </Label>
-              <div className="flex gap-2">
+              <div className="flex gap-2 items-center">
                 <Input
                   type="number"
                   value={nBox2 || ''}
                   onChange={(e) => setNBox2(Number(e.target.value) || 0)}
                   placeholder="Box"
-                  className="flex-1 text-black"
+                  className="flex-1"
                 />
-                <span className="flex items-center">×</span>
+                <span className="text-slate-500">×</span>
                 <Input
                   type="number"
                   value={nHen2 || ''}
                   onChange={(e) => setNHen2(Number(e.target.value) || 0)}
                   placeholder="Hen"
-                  className="flex-1 text-black"
+                  className="flex-1"
                 />
-                <span className="flex items-center text-black font-semibold min-w-[60px]">
+                <span className="flex items-center text-slate-200 font-semibold min-w-[60px]">
                   = {nBox2 * nHen2}
                 </span>
               </div>
             </div>
           </div>
 
-          <div className="flex items-center justify-between p-3 bg-gray-100 rounded-md">
-            <Label className="text-base font-semibold text-black">
+          <div className="flex items-center justify-between p-3 bg-slate-800/50 rounded-lg">
+            <Label className="text-base font-semibold text-slate-200">
               Total Hens / மொத்த கோழிகள்
             </Label>
-            <span className="text-xl font-bold text-black">{nTotalHens}</span>
+            <span className="text-xl font-bold text-yellow-400 font-mono">{nTotalHens}</span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
-              <Label className="text-black font-medium">Net Weight / மொத்த எடை (Kg)</Label>
+              <Label className="text-slate-300 font-medium">Net Weight / மொத்த எடை (Kg)</Label>
               <Input
                 type="number"
                 value={nNetWeight || ''}
@@ -333,7 +320,7 @@ export function BothForm({ onSubmit, lastRates, initialOldAmount = 0, initialOld
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-black font-medium">Water Weight / தண்ணீர் எடை (Kg)</Label>
+              <Label className="text-slate-300 font-medium">Water Weight / தண்ணீர் எடை (Kg)</Label>
               <Input
                 type="number"
                 value={nWaterWeight || ''}
@@ -342,8 +329,8 @@ export function BothForm({ onSubmit, lastRates, initialOldAmount = 0, initialOld
               />
             </div>
             <div className="space-y-2">
-              <Label>Weight / எடை (Kg)</Label>
-              <div className="h-10 flex items-center text-black font-semibold">
+              <Label className="text-slate-300 font-medium">Weight / எடை (Kg)</Label>
+              <div className="h-11 flex items-center text-slate-200 font-semibold font-mono">
                 {nWeight} Kg
               </div>
             </div>
@@ -351,7 +338,7 @@ export function BothForm({ onSubmit, lastRates, initialOldAmount = 0, initialOld
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label className="text-black font-medium">Rate / விலை (₹)</Label>
+              <Label className="text-slate-300 font-medium">Rate / விலை (₹)</Label>
               <Input
                 type="number"
                 value={nRate || ''}
@@ -360,8 +347,8 @@ export function BothForm({ onSubmit, lastRates, initialOldAmount = 0, initialOld
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-black font-medium">Amount / தொகை (₹)</Label>
-              <div className="h-10 flex items-center text-black font-semibold">
+              <Label className="text-slate-300 font-medium">Amount / தொகை (₹)</Label>
+              <div className="h-11 flex items-center text-slate-200 font-semibold font-mono">
                 {formatCurrency(nAmount)}
               </div>
             </div>
@@ -369,14 +356,13 @@ export function BothForm({ onSubmit, lastRates, initialOldAmount = 0, initialOld
         </CardContent>
       </Card>
 
-      {/* Combined Total */}
-      <Card className="border-2 border-black">
+      <Card className="border-2 border-green-500/30 bg-gradient-to-r from-slate-900 to-green-900/10">
         <CardContent className="py-4">
           <div className="flex items-center justify-between">
-            <Label className="text-xl font-bold">
+            <Label className="text-xl font-bold text-slate-100">
               Combined Total / ஒட்டுமொத்தம்
             </Label>
-            <span className="text-2xl font-bold text-black">
+            <span className="text-2xl font-bold text-green-400 font-mono">
               {formatCurrency(totalAmount)}
             </span>
           </div>
@@ -394,12 +380,12 @@ export function BothForm({ onSubmit, lastRates, initialOldAmount = 0, initialOld
         isFirstTransaction={isFirstTransaction}
       />
 
-      <div className="p-4 rounded-lg bg-green-50 border border-green-200">
+      <div className="p-4 rounded-lg bg-green-900/20 border border-green-500/30">
         <div className="flex items-center justify-between">
-          <Label className="text-lg font-semibold text-green-800">
+          <Label className="text-lg font-semibold text-green-300">
             {finalType === 'BALANCE' ? 'Final Balance / இறுதி நிலுவை' : 'Final Extra / இறுதி அதிகம்'}
           </Label>
-          <span className={`text-2xl font-bold ${finalType === 'BALANCE' ? 'text-green-700' : 'text-red-600'}`}>
+          <span className={`text-2xl font-bold font-mono ${finalType === 'BALANCE' ? 'text-green-400' : 'text-red-400'}`}>
             {formatCurrency(finalAmount)}
           </span>
         </div>

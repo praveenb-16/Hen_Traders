@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { formatCurrency } from '@/lib/calculations'
 import type { DiffType } from '@/lib/calculations'
+import { ChevronRight, Plus, History, Wallet } from 'lucide-react'
 
 interface LatestTransaction {
   finalType: DiffType
@@ -34,79 +35,112 @@ export default function HomePage() {
   }, [])
 
   return (
-    <div className="space-y-6">
-      {/* History Section - Separate - Blue Color */}
+    <div className="space-y-6 max-w-2xl mx-auto">
+      {/* Header */}
+      <div className="text-center py-4">
+        <h1 className="text-2xl font-bold text-slate-100">
+          பாலமுருகன் ட்ரேடர்ஸ்
+        </h1>
+        <p className="text-slate-400 mt-1">Balamurugan Traders</p>
+        <p className="text-green-400 text-sm mt-1">Poultry Trading Daily Ledger</p>
+      </div>
+
+      {/* Previous Balance Card */}
       {!loading && latestTx && (
         <Card 
-          className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-blue-500 bg-blue-50"
+          className="cursor-pointer card-hover border-green-500/30 bg-gradient-to-r from-slate-900 to-slate-800/50"
           onClick={() => router.push('/history')}
         >
           <CardHeader className="py-4">
             <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="text-xl text-blue-800">
-                  Previous Balance / முந்தைய நிலுவை
-                </CardTitle>
-                <p className="text-blue-600 mt-1">
-                  {latestTx.finalType === 'BALANCE' ? 'Balance / நிலுவை' : 'Extra / அதிகம்'}
-                </p>
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-green-500/20">
+                  <Wallet className="w-5 h-5 text-green-400" />
+                </div>
+                <div>
+                  <CardTitle className="text-lg text-green-400">
+                    Previous Balance
+                  </CardTitle>
+                  <p className="text-slate-400 text-sm mt-0.5">
+                    முந்தைய நிலுவை
+                  </p>
+                </div>
               </div>
               <div className="text-right">
-                <p className={`text-3xl font-bold ${latestTx.finalType === 'BALANCE' ? 'text-green-600' : 'text-red-600'}`}>
+                <p className={`text-3xl font-bold font-mono ${
+                  latestTx.finalType === 'BALANCE' ? 'text-green-400' : 'text-red-400'
+                }`}>
                   {formatCurrency(latestTx.finalAmount)}
                 </p>
-                <p className="text-sm text-blue-500">
-                  Click to view history / வரலாறு பார்க்க click
+                <p className="text-sm text-slate-500">
+                  {latestTx.finalType === 'BALANCE' ? 'Balance / நிலுவை' : 'Extra / அதிகம்'}
                 </p>
               </div>
             </div>
           </CardHeader>
+          <CardContent className="pt-0">
+            <div className="flex items-center text-sm text-slate-500">
+              <span>View full history</span>
+              <ChevronRight className="w-4 h-4 ml-1" />
+            </div>
+          </CardContent>
         </Card>
       )}
 
       {!loading && !latestTx && (
-        <Card className="border-2 border-blue-200 bg-blue-50">
-          <CardHeader className="py-4 text-center">
-            <CardTitle className="text-xl text-blue-800">
-              No Previous Records / முன்பு பதிவுகள் இல்லை
+        <Card className="border-dashed border-slate-600 bg-slate-900/50">
+          <CardHeader className="py-6 text-center">
+            <div className="p-3 rounded-full bg-slate-800 w-fit mx-auto mb-3">
+              <Plus className="w-6 h-6 text-slate-400" />
+            </div>
+            <CardTitle className="text-xl text-slate-200">
+              No Previous Records
             </CardTitle>
-            <p className="text-blue-600 mt-1">
-              Create your first transaction / உங்கள் முதல் பரிவராச்சனத்தை உருவாக்குங்கள்
+            <p className="text-slate-500 mt-1">
+              முன்பு பதிவுகள் இல்லை - Create your first transaction
             </p>
           </CardHeader>
         </Card>
       )}
 
+      {/* Select Hen Type */}
       <div className="text-center">
-        <h2 className="text-2xl font-bold text-slate-800">
-          கோழி வகை தேர்வு / Select Hen Type
+        <h2 className="text-xl font-semibold text-slate-200">
+          கோழி வகை தேர்வு
         </h2>
+        <p className="text-slate-500 text-sm">Select Hen Type</p>
       </div>
 
       {step === 'initial' && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Card 
-            className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-slate-200 hover:border-slate-400"
+            className="cursor-pointer card-hover border-slate-600/50"
             onClick={() => setStep('single')}
           >
             <CardHeader className="text-center py-8">
-              <CardTitle className="text-3xl">1</CardTitle>
-              <p className="text-lg font-medium mt-2">ஒரே வகை / Single Type</p>
+              <div className="w-16 h-16 rounded-full bg-slate-800 flex items-center justify-center mx-auto mb-4">
+                <span className="text-3xl font-bold text-green-400">1</span>
+              </div>
+              <CardTitle className="text-xl">ஒரே வகை</CardTitle>
+              <p className="text-slate-400 mt-1 font-medium">Single Type</p>
             </CardHeader>
-            <CardContent className="text-center text-slate-600 pb-8">
+            <CardContent className="text-center text-slate-500 pb-6">
               Either Katti Koli or Nalla Koli
             </CardContent>
           </Card>
 
           <Card 
-            className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-slate-200 hover:border-slate-400"
+            className="cursor-pointer card-hover border-slate-600/50"
             onClick={() => router.push('/new?type=BOTH')}
           >
             <CardHeader className="text-center py-8">
-              <CardTitle className="text-3xl">2</CardTitle>
-              <p className="text-lg font-medium mt-2">இரண்டு வகை / Both Types</p>
+              <div className="w-16 h-16 rounded-full bg-slate-800 flex items-center justify-center mx-auto mb-4">
+                <span className="text-3xl font-bold text-blue-400">2</span>
+              </div>
+              <CardTitle className="text-xl">இரண்டு வகை</CardTitle>
+              <p className="text-slate-400 mt-1 font-medium">Both Types</p>
             </CardHeader>
-            <CardContent className="text-center text-slate-600 pb-8">
+            <CardContent className="text-center text-slate-500 pb-6">
               Both Katti Koli and Nalla Koli together
             </CardContent>
           </Card>
@@ -118,39 +152,57 @@ export default function HomePage() {
           <Button 
             variant="outline" 
             onClick={() => setStep('initial')}
-            className="mb-4"
+            className="mb-2"
           >
             ← Back / திரும்பு
           </Button>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Card 
-              className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-slate-200 hover:border-slate-400"
+              className="cursor-pointer card-hover border-slate-600/50"
               onClick={() => router.push('/new?type=KATTI_KOLI')}
             >
-              <CardHeader className="text-center py-8">
-                <CardTitle className="text-2xl">கட்டி கோழி</CardTitle>
-                <p className="text-lg font-medium mt-2">Katti Koli</p>
+              <CardHeader className="text-center py-6">
+                <div className="w-14 h-14 rounded-full bg-orange-500/20 flex items-center justify-center mx-auto mb-3">
+                  <span className="text-2xl">🐔</span>
+                </div>
+                <CardTitle className="text-xl text-orange-300">கட்டி கோழி</CardTitle>
+                <p className="text-slate-400 mt-1 font-medium">Katti Koli</p>
               </CardHeader>
-              <CardContent className="text-center text-slate-600 pb-8">
-                Weight-based calculation
+              <CardContent className="text-center text-slate-500 pb-6">
+                Weight-based calculation / Count × Rate
               </CardContent>
             </Card>
 
             <Card 
-              className="cursor-pointer hover:shadow-lg transition-shadow border-2 border-slate-200 hover:border-slate-400"
+              className="cursor-pointer card-hover border-slate-600/50"
               onClick={() => router.push('/new?type=NALLA_KOLI')}
             >
-              <CardHeader className="text-center py-8">
-                <CardTitle className="text-2xl">நல்ல கோழி</CardTitle>
-                <p className="text-lg font-medium mt-2">Nalla Koli</p>
+              <CardHeader className="text-center py-6">
+                <div className="w-14 h-14 rounded-full bg-yellow-500/20 flex items-center justify-center mx-auto mb-3">
+                  <span className="text-2xl">🐣</span>
+                </div>
+                <CardTitle className="text-xl text-yellow-300">நல்ல கோழி</CardTitle>
+                <p className="text-slate-400 mt-1 font-medium">Nalla Koli</p>
               </CardHeader>
-              <CardContent className="text-center text-slate-600 pb-8">
-                Weight-based calculation
+              <CardContent className="text-center text-slate-500 pb-6">
+                Weight-based calculation / Net Weight × Rate
               </CardContent>
             </Card>
           </div>
         </div>
       )}
+
+      {/* Quick Actions */}
+      <div className="flex gap-3 pt-2">
+        <Button 
+          variant="secondary" 
+          className="flex-1"
+          onClick={() => router.push('/history')}
+        >
+          <History className="w-4 h-4 mr-2" />
+          History / வரலாறு
+        </Button>
+      </div>
     </div>
   )
 }

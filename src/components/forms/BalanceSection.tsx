@@ -3,8 +3,10 @@
 import { useState, useEffect } from 'react'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Button } from '@/components/ui/button'
 import { calcFinal, formatCurrency } from '@/lib/calculations'
 import type { DiffType } from '@/lib/calculations'
+import { Edit2, Check, X } from 'lucide-react'
 
 interface BalanceSectionProps {
   totalAmount: number
@@ -72,6 +74,7 @@ export function BalanceSection({
 
   const handleSaveOldAmount = () => {
     onOldAmountChange(localOldAmount)
+    onOldTypeChange(localOldType)
     setShowOldInput(false)
   }
 
@@ -82,10 +85,10 @@ export function BalanceSection({
   }
 
   return (
-    <div className="space-y-4 border-t pt-4 mt-4">
+    <div className="space-y-4 border-t border-slate-700/50 pt-5 mt-1">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label className="text-base text-black font-semibold">
+          <Label className="text-base text-slate-300 font-semibold">
             Paid Amount / செலுத்திய தொகை
           </Label>
           <Input
@@ -93,25 +96,25 @@ export function BalanceSection({
             value={paidAmount || ''}
             onChange={(e) => handlePaidChange(Number(e.target.value) || 0)}
             placeholder="0"
-            className="text-lg font-semibold text-black"
+            className="text-lg font-semibold"
           />
         </div>
         <div className="space-y-2">
-          <Label className="text-base text-black font-semibold">
+          <Label className="text-base text-slate-300 font-semibold">
             Total Amount / மொத்தம்
           </Label>
-          <div className="h-10 flex items-center text-lg font-semibold text-black">
+          <div className="h-11 flex items-center text-lg font-semibold text-slate-100 font-mono">
             {formatCurrency(totalAmount)}
           </div>
         </div>
       </div>
 
-      <div className="p-4 rounded-lg bg-gray-200">
+      <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
         <div className="flex items-center justify-between">
-          <Label className="text-base text-black font-semibold">
-            {todayType === 'BALANCE' ? 'Balance / நிலுவை' : 'Extra / அதிகம்'}
+          <Label className="text-base text-slate-300 font-semibold">
+            {todayType === 'BALANCE' ? 'Today Balance / இன்று நிலுவை' : 'Today Extra / இன்று அதிகம்'}
           </Label>
-          <span className={`text-lg font-bold ${todayType === 'BALANCE' ? 'text-green-700' : 'text-red-600'}`}>
+          <span className={`text-lg font-bold font-mono ${todayType === 'BALANCE' ? 'text-green-400' : 'text-red-400'}`}>
             {formatCurrency(todayAmount)}
           </span>
         </div>
@@ -119,19 +122,18 @@ export function BalanceSection({
 
       {!isFirstTransaction && (
         <div className="space-y-3">
-          {/* Previous Balance Card - Blue Color */}
-          <div className={`p-4 rounded-lg border-2 ${oldType === 'BALANCE' ? 'bg-blue-50 border-blue-500' : 'bg-red-50 border-red-500'}`}>
+          <div className={`p-4 rounded-lg border-2 ${oldType === 'BALANCE' ? 'bg-green-900/20 border-green-500/30' : 'bg-red-900/20 border-red-500/30'}`}>
             <div className="flex items-center justify-between">
               <div>
-                <Label className="text-base font-bold text-black">
+                <Label className="text-base font-bold text-slate-200">
                   Previous / முந்தைய
                 </Label>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-slate-500">
                   {oldType === 'BALANCE' ? 'Balance / நிலுவை' : 'Extra / அதிகம்'}
                 </p>
               </div>
               <div className="text-right">
-                <p className={`text-2xl font-bold ${oldType === 'BALANCE' ? 'text-green-600' : 'text-red-600'}`}>
+                <p className={`text-2xl font-bold font-mono ${oldType === 'BALANCE' ? 'text-green-400' : 'text-red-400'}`}>
                   {formatCurrency(oldAmount)}
                 </p>
               </div>
@@ -139,80 +141,66 @@ export function BalanceSection({
           </div>
 
           <div className="flex items-center justify-between">
-            <Label className="text-base text-black font-semibold">Edit Old Balance / பழைய நிலுவை மாற்று</Label>
+            <Label className="text-base text-slate-400 font-medium">Edit Old Balance / பழைய நிலுவை மாற்று</Label>
             {!showOldInput && (
-              <button
-                type="button"
+              <Button 
+                variant="ghost" 
+                size="sm"
                 onClick={() => setShowOldInput(true)}
-                className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+                className="text-green-400 hover:text-green-300"
               >
+                <Edit2 className="w-4 h-4 mr-1" />
                 Edit
-              </button>
+              </Button>
             )}
-          </div>
-          <div className="flex items-center gap-2">
-            <Input
-              type="number"
-              value={showOldInput ? localOldAmount : oldAmount || ''}
-              onChange={(e) => handleOldAmountChange(Number(e.target.value) || 0)}
-              placeholder={showOldInput ? "Enter old balance" : undefined}
-              className="flex-1 text-black font-medium"
-              readOnly={!showOldInput}
-            />
-            <div className="flex rounded-md overflow-hidden border">
-              <button
-                type="button"
-                onClick={() => {
-                  const newType: DiffType = 'BALANCE'
-                  setLocalOldType(newType)
-                  if (showOldInput) {
-                    onOldTypeChange(newType)
-                  }
-                }}
-                className={`px-3 py-2 text-sm font-medium ${localOldType === 'BALANCE' ? 'bg-green-600 text-white' : 'bg-white text-black hover:bg-slate-100'}`}
-              >
-                Balance
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  const newType: DiffType = 'EXTRA'
-                  setLocalOldType(newType)
-                  if (showOldInput) {
-                    onOldTypeChange(newType)
-                  }
-                }}
-                className={`px-3 py-2 text-sm font-medium ${localOldType === 'EXTRA' ? 'bg-red-600 text-white' : 'bg-white text-black hover:bg-slate-100'}`}
-              >
-                Extra
-              </button>
-            </div>
           </div>
           
           {showOldInput && (
-            <div className="flex gap-2 mt-2">
-              <button
-                type="button"
-                onClick={handleSaveOldAmount}
-                className="px-4 py-2 bg-green-600 text-white rounded-md font-medium hover:bg-green-700"
-              >
-                Save
-              </button>
-              <button
-                type="button"
-                onClick={handleCancelEdit}
-                className="px-4 py-2 bg-gray-300 text-black rounded-md font-medium hover:bg-gray-400"
-              >
-                Cancel
-              </button>
-            </div>
+            <>
+              <div className="flex items-center gap-2">
+                <Input
+                  type="number"
+                  value={localOldAmount || ''}
+                  onChange={(e) => handleOldAmountChange(Number(e.target.value) || 0)}
+                  placeholder="Enter old balance"
+                  className="flex-1 font-medium"
+                />
+                <div className="flex rounded-lg overflow-hidden border border-slate-600">
+                  <button
+                    type="button"
+                    onClick={() => setLocalOldType('BALANCE')}
+                    className={`px-4 py-2.5 text-sm font-medium transition-colors ${localOldType === 'BALANCE' ? 'bg-green-600 text-white' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`}
+                  >
+                    Balance
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setLocalOldType('EXTRA')}
+                    className={`px-4 py-2.5 text-sm font-medium transition-colors ${localOldType === 'EXTRA' ? 'bg-red-600 text-white' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`}
+                  >
+                    Extra
+                  </button>
+                </div>
+              </div>
+              
+              <div className="flex gap-2 mt-2">
+                <Button size="sm" onClick={handleSaveOldAmount} className="bg-green-600 hover:bg-green-700">
+                  <Check className="w-4 h-4 mr-1" />
+                  Save
+                </Button>
+                <Button size="sm" variant="outline" onClick={handleCancelEdit}>
+                  <X className="w-4 h-4 mr-1" />
+                  Cancel
+                </Button>
+              </div>
+            </>
           )}
         </div>
       )}
 
       {isFirstTransaction && (
-        <div className="space-y-2">
-          <Label className="text-base text-black font-semibold">Old Balance / பழைய நிலுவை</Label>
+        <div className="space-y-3">
+          <Label className="text-base text-slate-300 font-semibold">Old Balance / பழைய நிலுவை</Label>
           <div className="flex items-center gap-2">
             <Input
               type="number"
@@ -220,9 +208,9 @@ export function BalanceSection({
               onChange={(e) => handleOldAmountChange(Number(e.target.value) || 0)}
               onBlur={() => onOldAmountChange(localOldAmount)}
               placeholder="Enter old balance"
-              className="flex-1 text-black font-medium"
+              className="flex-1 font-medium"
             />
-            <div className="flex rounded-md overflow-hidden border">
+            <div className="flex rounded-lg overflow-hidden border border-slate-600">
               <button
                 type="button"
                 onClick={() => {
@@ -230,7 +218,7 @@ export function BalanceSection({
                   setLocalOldType(newType)
                   onOldTypeChange(newType)
                 }}
-                className={`px-3 py-2 text-sm font-medium ${localOldType === 'BALANCE' ? 'bg-green-600 text-white' : 'bg-white text-black hover:bg-slate-100'}`}
+                className={`px-4 py-2.5 text-sm font-medium transition-colors ${localOldType === 'BALANCE' ? 'bg-green-600 text-white' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`}
               >
                 Balance
               </button>
@@ -241,7 +229,7 @@ export function BalanceSection({
                   setLocalOldType(newType)
                   onOldTypeChange(newType)
                 }}
-                className={`px-3 py-2 text-sm font-medium ${localOldType === 'EXTRA' ? 'bg-red-600 text-white' : 'bg-white text-black hover:bg-slate-100'}`}
+                className={`px-4 py-2.5 text-sm font-medium transition-colors ${localOldType === 'EXTRA' ? 'bg-red-600 text-white' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`}
               >
                 Extra
               </button>

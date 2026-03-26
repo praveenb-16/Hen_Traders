@@ -53,13 +53,11 @@ export function KattiKoliForm({ onSubmit, lastRates, initialOldAmount = 0, initi
   const kAmount = kTotalHens * kRate
   const kTotal = kAmount + kLabour
 
-  // Sync old amount/type from props when they change
   useEffect(() => {
     setOldAmount(initialOldAmount)
     setOldType(initialOldType || 'BALANCE')
   }, [initialOldAmount, initialOldType])
 
-  // Sync rate from props when it changes
   useEffect(() => {
     if (lastRates?.kRate) {
       setKRate(lastRates.kRate)
@@ -97,10 +95,10 @@ export function KattiKoliForm({ onSubmit, lastRates, initialOldAmount = 0, initi
   }
 
   return (
-    <div className="space-y-6">
-      <Card>
+    <div className="space-y-5">
+      <Card className="border-slate-700/50">
         <CardHeader>
-          <CardTitle className="text-xl text-center">
+          <CardTitle className="text-xl text-center text-orange-300">
             கட்டி கோழி / Katti Koli
           </CardTitle>
         </CardHeader>
@@ -108,9 +106,9 @@ export function KattiKoliForm({ onSubmit, lastRates, initialOldAmount = 0, initi
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>
-                Row 1 / வரிசை 1 <span className="text-black">(Box × Hen)</span>
+                Row 1 / வரிசை 1 <span className="text-slate-500">(Box × Hen)</span>
               </Label>
-              <div className="flex gap-2">
+              <div className="flex gap-2 items-center">
                 <Input
                   type="number"
                   value={kBox1 || ''}
@@ -118,7 +116,7 @@ export function KattiKoliForm({ onSubmit, lastRates, initialOldAmount = 0, initi
                   placeholder="Box"
                   className="flex-1"
                 />
-                <span className="flex items-center">×</span>
+                <span className="text-slate-500">×</span>
                 <Input
                   type="number"
                   value={kHen1 || ''}
@@ -126,16 +124,16 @@ export function KattiKoliForm({ onSubmit, lastRates, initialOldAmount = 0, initi
                   placeholder="Hen"
                   className="flex-1"
                 />
-                <span className="flex items-center text-black font-semibold min-w-[60px]">
+                <span className="flex items-center text-slate-200 font-semibold min-w-[60px]">
                   = {kBox1 * kHen1}
                 </span>
               </div>
             </div>
             <div className="space-y-2">
               <Label>
-                Row 2 / வரிசை 2 <span className="text-black">(Box × Hen)</span>
+                Row 2 / வரிசை 2 <span className="text-slate-500">(Box × Hen)</span>
               </Label>
-              <div className="flex gap-2">
+              <div className="flex gap-2 items-center">
                 <Input
                   type="number"
                   value={kBox2 || ''}
@@ -143,7 +141,7 @@ export function KattiKoliForm({ onSubmit, lastRates, initialOldAmount = 0, initi
                   placeholder="Box"
                   className="flex-1"
                 />
-                <span className="flex items-center">×</span>
+                <span className="text-slate-500">×</span>
                 <Input
                   type="number"
                   value={kHen2 || ''}
@@ -151,54 +149,52 @@ export function KattiKoliForm({ onSubmit, lastRates, initialOldAmount = 0, initi
                   placeholder="Hen"
                   className="flex-1"
                 />
-                <span className="flex items-center text-black font-semibold min-w-[60px]">
+                <span className="flex items-center text-slate-200 font-semibold min-w-[60px]">
                   = {kBox2 * kHen2}
                 </span>
               </div>
             </div>
           </div>
 
-          <div className="flex items-center justify-between p-3 bg-gray-100 rounded-md">
-            <Label className="text-base font-semibold text-black">
+          <div className="flex items-center justify-between p-3 bg-slate-800/50 rounded-lg">
+            <Label className="text-base font-semibold text-slate-200">
               Total Hens / மொத்த கோழிகள்
             </Label>
-            <span className="text-xl font-bold text-black">{kTotalHens}</span>
+            <span className="text-xl font-bold text-orange-400 font-mono">{kTotalHens}</span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
-              <Label className="text-black font-medium">Rate / விலை (₹)</Label>
+              <Label className="text-slate-300 font-medium">Rate / விலை (₹)</Label>
               <Input
                 type="number"
                 value={kRate || ''}
                 onChange={(e) => setKRate(Number(e.target.value) || 0)}
                 placeholder="0"
-                className="text-black"
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-black font-medium">Amount / தொகை (₹)</Label>
-              <div className="h-10 flex items-center text-black font-semibold">
+              <Label className="text-slate-300 font-medium">Amount / தொகை (₹)</Label>
+              <div className="h-11 flex items-center text-slate-200 font-semibold font-mono">
                 {formatCurrency(kAmount)}
               </div>
             </div>
             <div className="space-y-2">
-              <Label className="text-black font-medium">Labour / தொழிலாளர் (₹)</Label>
+              <Label className="text-slate-300 font-medium">Labour / தொழிலாளர் (₹)</Label>
               <Input
                 type="number"
                 value={kLabour || ''}
                 onChange={(e) => setKLabour(Number(e.target.value) || 0)}
                 placeholder="1600"
-                className="text-black"
               />
             </div>
           </div>
 
-          <div className="flex items-center justify-between p-3 bg-gray-200 rounded-md">
-            <Label className="text-base font-semibold text-black">
+          <div className="flex items-center justify-between p-3 bg-slate-700/50 rounded-lg border border-slate-600/50">
+            <Label className="text-base font-semibold text-slate-100">
               Total / மொத்தம்
             </Label>
-            <span className="text-xl font-bold text-black">
+            <span className="text-xl font-bold text-green-400 font-mono">
               {formatCurrency(kTotal)}
             </span>
           </div>
@@ -216,12 +212,12 @@ export function KattiKoliForm({ onSubmit, lastRates, initialOldAmount = 0, initi
         isFirstTransaction={isFirstTransaction}
       />
 
-      <div className="p-4 rounded-lg bg-green-50 border border-green-200">
+      <div className="p-4 rounded-lg bg-green-900/20 border border-green-500/30">
         <div className="flex items-center justify-between">
-          <Label className="text-lg font-semibold text-green-800">
+          <Label className="text-lg font-semibold text-green-300">
             {finalType === 'BALANCE' ? 'Final Balance / இறுதி நிலுவை' : 'Final Extra / இறுதி அதிகம்'}
           </Label>
-          <span className={`text-2xl font-bold ${finalType === 'BALANCE' ? 'text-green-700' : 'text-red-600'}`}>
+          <span className={`text-2xl font-bold font-mono ${finalType === 'BALANCE' ? 'text-green-400' : 'text-red-400'}`}>
             {formatCurrency(finalAmount)}
           </span>
         </div>

@@ -9,6 +9,7 @@ import { BothForm, type BothFormData } from '@/components/forms/BothForm'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle } from '@/components/ui/card'
 import type { DiffType } from '@/lib/calculations'
+import { ArrowLeft, Save, Calendar } from 'lucide-react'
 
 type FormData = KattiFormData | NallaFormData | BothFormData
 
@@ -73,10 +74,23 @@ export default function NewTransactionPage() {
     }
   }
 
+  const getHenTypeColor = () => {
+    switch (type) {
+      case 'KATTI_KOLI':
+        return 'text-orange-300'
+      case 'NALLA_KOLI':
+        return 'text-yellow-300'
+      case 'BOTH':
+        return 'text-green-300'
+      default:
+        return 'text-slate-300'
+    }
+  }
+
   if (!type) {
     return (
       <div className="text-center p-8">
-        <p className="text-lg text-slate-600">Please select a hen type from the home page.</p>
+        <p className="text-lg text-slate-400">Please select a hen type from the home page.</p>
         <Button onClick={() => router.push('/')} className="mt-4">
           Go Home / முகப்பு
         </Button>
@@ -85,16 +99,17 @@ export default function NewTransactionPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <Card>
+    <div className="space-y-5">
+      <Card className="border-slate-700/50">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl">பாலமுருகன் ட்ரேடர்ஸ் / Balamurugan Traders</CardTitle>
-          <p className="text-lg font-medium mt-2">
+          <CardTitle className="text-2xl">பாலமுருகன் ட்ரேடர்ஸ்</CardTitle>
+          <p className={`text-lg font-medium mt-1 ${getHenTypeColor()}`}>
             {getHenTypeLabel()}
           </p>
-          <p className="text-slate-600">
-            Date / தேதி: {format(new Date(), 'dd/MM/yy')}
-          </p>
+          <div className="flex items-center justify-center gap-2 text-slate-500 mt-2">
+            <Calendar className="w-4 h-4" />
+            <span>Date / தேதி: {format(new Date(), 'dd/MM/yy')}</span>
+          </div>
         </CardHeader>
       </Card>
 
@@ -128,19 +143,21 @@ export default function NewTransactionPage() {
         />
       )}
 
-      <div className="flex gap-4">
+      <div className="flex gap-3 pt-2">
         <Button
           variant="outline"
           onClick={() => router.push('/')}
           className="flex-1"
         >
+          <ArrowLeft className="w-4 h-4 mr-2" />
           Cancel / ரத்து
         </Button>
         <Button
           onClick={handleSubmit}
           disabled={loading || !formData}
-          className="flex-1"
+          className="flex-1 bg-green-600 hover:bg-green-700"
         >
+          <Save className="w-4 h-4 mr-2" />
           {loading ? 'Saving...' : 'Save / சேமி'}
         </Button>
       </div>
