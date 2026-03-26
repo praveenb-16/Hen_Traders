@@ -21,7 +21,10 @@ export interface NallaFormData {
   nHen1: number
   nBox2: number
   nHen2: number
+  nBox3: number
+  nHen3: number
   nTotalHens: number
+  nFreeHen: number
   nNetWeight: number
   nWaterWeight: number
   nWeight: number
@@ -43,6 +46,9 @@ export function NallaKoliForm({ onSubmit, lastRates, initialOldAmount = 0, initi
   const [nHen1, setNHen1] = useState(0)
   const [nBox2, setNBox2] = useState(0)
   const [nHen2, setNHen2] = useState(0)
+  const [nBox3, setNBox3] = useState(0)
+  const [nHen3, setNHen3] = useState(0)
+  const [nFreeHen, setNFreeHen] = useState(0)
   const [nNetWeight, setNNetWeight] = useState(0)
   const [nWaterWeight, setNWaterWeight] = useState(0)
   const [nRate, setNRate] = useState(lastRates?.nRate || 68)
@@ -53,7 +59,7 @@ export function NallaKoliForm({ onSubmit, lastRates, initialOldAmount = 0, initi
   const [finalType, setFinalType] = useState<DiffType>('BALANCE')
   const [finalAmount, setFinalAmount] = useState(0)
 
-  const nTotalHens = nBox1 * nHen1 + nBox2 * nHen2
+  const nTotalHens = nBox1 * nHen1 + nBox2 * nHen2 + nBox3 * nHen3
   const nWeight = nNetWeight - nWaterWeight
   const nAmount = nWeight * nRate
   const nTotal = nAmount + nLabour
@@ -77,7 +83,10 @@ export function NallaKoliForm({ onSubmit, lastRates, initialOldAmount = 0, initi
       nHen1,
       nBox2,
       nHen2,
+      nBox3,
+      nHen3,
       nTotalHens,
+      nFreeHen,
       nNetWeight,
       nWaterWeight,
       nWeight,
@@ -94,12 +103,40 @@ export function NallaKoliForm({ onSubmit, lastRates, initialOldAmount = 0, initi
       finalAmount,
     }
     onSubmit(submitData)
-  }, [nBox1, nHen1, nBox2, nHen2, nNetWeight, nWaterWeight, nRate, nLabour, paidAmount, oldAmount, oldType, finalType, finalAmount])
+  }, [nBox1, nHen1, nBox2, nHen2, nBox3, nHen3, nFreeHen, nNetWeight, nWaterWeight, nRate, nLabour, paidAmount, oldAmount, oldType, finalType, finalAmount])
 
   const handleFinalChange = (type: DiffType, amount: number) => {
     setFinalType(type)
     setFinalAmount(amount)
   }
+
+  const renderRow = (box: number, hen: number, boxSetter: (v: number) => void, henSetter: (v: number) => void, label: string) => (
+    <div className="space-y-2">
+      <Label>
+        {label} <span className="text-slate-500">(Box × Hen)</span>
+      </Label>
+      <div className="flex gap-2 items-center">
+        <Input
+          type="number"
+          value={box || ''}
+          onChange={(e) => boxSetter(Number(e.target.value) || 0)}
+          placeholder="Box"
+          className="flex-1"
+        />
+        <span className="text-slate-500">×</span>
+        <Input
+          type="number"
+          value={hen || ''}
+          onChange={(e) => henSetter(Number(e.target.value) || 0)}
+          placeholder="Hen"
+          className="flex-1"
+        />
+        <span className="flex items-center text-slate-200 font-semibold min-w-[60px]">
+          = {box * hen}
+        </span>
+      </div>
+    </div>
+  )
 
   return (
     <div className="space-y-5">
@@ -111,63 +148,31 @@ export function NallaKoliForm({ onSubmit, lastRates, initialOldAmount = 0, initi
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label>
-                Row 1 / வரிசை 1 <span className="text-slate-500">(Box × Hen)</span>
-              </Label>
-              <div className="flex gap-2 items-center">
-                <Input
-                  type="number"
-                  value={nBox1 || ''}
-                  onChange={(e) => setNBox1(Number(e.target.value) || 0)}
-                  placeholder="Box"
-                  className="flex-1"
-                />
-                <span className="text-slate-500">×</span>
-                <Input
-                  type="number"
-                  value={nHen1 || ''}
-                  onChange={(e) => setNHen1(Number(e.target.value) || 0)}
-                  placeholder="Hen"
-                  className="flex-1"
-                />
-                <span className="flex items-center text-slate-200 font-semibold min-w-[60px]">
-                  = {nBox1 * nHen1}
-                </span>
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label>
-                Row 2 / வரிசை 2 <span className="text-slate-500">(Box × Hen)</span>
-              </Label>
-              <div className="flex gap-2 items-center">
-                <Input
-                  type="number"
-                  value={nBox2 || ''}
-                  onChange={(e) => setNBox2(Number(e.target.value) || 0)}
-                  placeholder="Box"
-                  className="flex-1"
-                />
-                <span className="text-slate-500">×</span>
-                <Input
-                  type="number"
-                  value={nHen2 || ''}
-                  onChange={(e) => setNHen2(Number(e.target.value) || 0)}
-                  placeholder="Hen"
-                  className="flex-1"
-                />
-                <span className="flex items-center text-slate-200 font-semibold min-w-[60px]">
-                  = {nBox2 * nHen2}
-                </span>
-              </div>
-            </div>
+            {renderRow(nBox1, nHen1, setNBox1, setNHen1, 'Row 1 / வரிசை 1')}
+            {renderRow(nBox2, nHen2, setNBox2, setNHen2, 'Row 2 / வரிசை 2')}
           </div>
+
+          {renderRow(nBox3, nHen3, setNBox3, setNHen3, 'Row 3 / வரிசை 3')}
 
           <div className="flex items-center justify-between p-3 bg-slate-800/50 rounded-lg">
             <Label className="text-base font-semibold text-slate-200">
               Total Hens / மொத்த கோழிகள்
             </Label>
             <span className="text-xl font-bold text-yellow-400 font-mono">{nTotalHens}</span>
+          </div>
+
+          <div className="flex items-center gap-4 p-3 bg-purple-900/20 border border-purple-500/30 rounded-lg">
+            <Label className="text-base font-semibold text-purple-300">
+              Free Hens / இலவை கோழி
+            </Label>
+            <Input
+              type="number"
+              value={nFreeHen || ''}
+              onChange={(e) => setNFreeHen(Number(e.target.value) || 0)}
+              placeholder="0"
+              className="flex-1 max-w-[120px]"
+            />
+            <span className="text-purple-300 font-medium">hens</span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

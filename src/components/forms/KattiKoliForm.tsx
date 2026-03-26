@@ -21,7 +21,10 @@ export interface KattiFormData {
   kHen1: number
   kBox2: number
   kHen2: number
+  kBox3: number
+  kHen3: number
   kTotalHens: number
+  kFreeHen: number
   kRate: number
   kAmount: number
   kLabour: number
@@ -41,6 +44,9 @@ export function KattiKoliForm({ onSubmit, lastRates, initialOldAmount = 0, initi
   const [kHen1, setKHen1] = useState(0)
   const [kBox2, setKBox2] = useState(0)
   const [kHen2, setKHen2] = useState(0)
+  const [kBox3, setKBox3] = useState(0)
+  const [kHen3, setKHen3] = useState(0)
+  const [kFreeHen, setKFreeHen] = useState(0)
   const [kRate, setKRate] = useState(lastRates?.kRate || 45)
   const [kLabour, setKLabour] = useState(1600)
   const [paidAmount, setPaidAmount] = useState(0)
@@ -49,7 +55,7 @@ export function KattiKoliForm({ onSubmit, lastRates, initialOldAmount = 0, initi
   const [finalType, setFinalType] = useState<DiffType>('BALANCE')
   const [finalAmount, setFinalAmount] = useState(0)
 
-  const kTotalHens = kBox1 * kHen1 + kBox2 * kHen2
+  const kTotalHens = kBox1 * kHen1 + kBox2 * kHen2 + kBox3 * kHen3
   const kAmount = kTotalHens * kRate
   const kTotal = kAmount + kLabour
 
@@ -72,7 +78,10 @@ export function KattiKoliForm({ onSubmit, lastRates, initialOldAmount = 0, initi
       kHen1,
       kBox2,
       kHen2,
+      kBox3,
+      kHen3,
       kTotalHens,
+      kFreeHen,
       kRate,
       kAmount,
       kLabour,
@@ -87,12 +96,40 @@ export function KattiKoliForm({ onSubmit, lastRates, initialOldAmount = 0, initi
       finalAmount,
     }
     onSubmit(submitData)
-  }, [kBox1, kHen1, kBox2, kHen2, kRate, kLabour, paidAmount, oldAmount, oldType, finalType, finalAmount])
+  }, [kBox1, kHen1, kBox2, kHen2, kBox3, kHen3, kFreeHen, kRate, kLabour, paidAmount, oldAmount, oldType, finalType, finalAmount])
 
   const handleFinalChange = (type: DiffType, amount: number) => {
     setFinalType(type)
     setFinalAmount(amount)
   }
+
+  const renderRow = (box: number, hen: number, boxSetter: (v: number) => void, henSetter: (v: number) => void, label: string) => (
+    <div className="space-y-2">
+      <Label>
+        {label} <span className="text-slate-500">(Box × Hen)</span>
+      </Label>
+      <div className="flex gap-2 items-center">
+        <Input
+          type="number"
+          value={box || ''}
+          onChange={(e) => boxSetter(Number(e.target.value) || 0)}
+          placeholder="Box"
+          className="flex-1"
+        />
+        <span className="text-slate-500">×</span>
+        <Input
+          type="number"
+          value={hen || ''}
+          onChange={(e) => henSetter(Number(e.target.value) || 0)}
+          placeholder="Hen"
+          className="flex-1"
+        />
+        <span className="flex items-center text-slate-200 font-semibold min-w-[60px]">
+          = {box * hen}
+        </span>
+      </div>
+    </div>
+  )
 
   return (
     <div className="space-y-5">
@@ -104,63 +141,31 @@ export function KattiKoliForm({ onSubmit, lastRates, initialOldAmount = 0, initi
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label>
-                Row 1 / வரிசை 1 <span className="text-slate-500">(Box × Hen)</span>
-              </Label>
-              <div className="flex gap-2 items-center">
-                <Input
-                  type="number"
-                  value={kBox1 || ''}
-                  onChange={(e) => setKBox1(Number(e.target.value) || 0)}
-                  placeholder="Box"
-                  className="flex-1"
-                />
-                <span className="text-slate-500">×</span>
-                <Input
-                  type="number"
-                  value={kHen1 || ''}
-                  onChange={(e) => setKHen1(Number(e.target.value) || 0)}
-                  placeholder="Hen"
-                  className="flex-1"
-                />
-                <span className="flex items-center text-slate-200 font-semibold min-w-[60px]">
-                  = {kBox1 * kHen1}
-                </span>
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label>
-                Row 2 / வரிசை 2 <span className="text-slate-500">(Box × Hen)</span>
-              </Label>
-              <div className="flex gap-2 items-center">
-                <Input
-                  type="number"
-                  value={kBox2 || ''}
-                  onChange={(e) => setKBox2(Number(e.target.value) || 0)}
-                  placeholder="Box"
-                  className="flex-1"
-                />
-                <span className="text-slate-500">×</span>
-                <Input
-                  type="number"
-                  value={kHen2 || ''}
-                  onChange={(e) => setKHen2(Number(e.target.value) || 0)}
-                  placeholder="Hen"
-                  className="flex-1"
-                />
-                <span className="flex items-center text-slate-200 font-semibold min-w-[60px]">
-                  = {kBox2 * kHen2}
-                </span>
-              </div>
-            </div>
+            {renderRow(kBox1, kHen1, setKBox1, setKHen1, 'Row 1 / வரிசை 1')}
+            {renderRow(kBox2, kHen2, setKBox2, setKHen2, 'Row 2 / வரிசை 2')}
           </div>
+
+          {renderRow(kBox3, kHen3, setKBox3, setKHen3, 'Row 3 / வரிசை 3')}
 
           <div className="flex items-center justify-between p-3 bg-slate-800/50 rounded-lg">
             <Label className="text-base font-semibold text-slate-200">
               Total Hens / மொத்த கோழிகள்
             </Label>
             <span className="text-xl font-bold text-orange-400 font-mono">{kTotalHens}</span>
+          </div>
+
+          <div className="flex items-center gap-4 p-3 bg-purple-900/20 border border-purple-500/30 rounded-lg">
+            <Label className="text-base font-semibold text-purple-300">
+              Free Hens / இலவை கோழி
+            </Label>
+            <Input
+              type="number"
+              value={kFreeHen || ''}
+              onChange={(e) => setKFreeHen(Number(e.target.value) || 0)}
+              placeholder="0"
+              className="flex-1 max-w-[120px]"
+            />
+            <span className="text-purple-300 font-medium">hens</span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

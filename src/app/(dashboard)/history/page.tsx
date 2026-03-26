@@ -17,7 +17,10 @@ interface Transaction {
   kHen1: number | null
   kBox2: number | null
   kHen2: number | null
+  kBox3: number | null
+  kHen3: number | null
   kTotalHens: number | null
+  kFreeHen: number | null
   kRate: number | null
   kAmount: number | null
   kLabour: number | null
@@ -26,7 +29,10 @@ interface Transaction {
   nHen1: number | null
   nBox2: number | null
   nHen2: number | null
+  nBox3: number | null
+  nHen3: number | null
   nTotalHens: number | null
+  nFreeHen: number | null
   nNetWeight: number | null
   nWaterWeight: number | null
   nWeight: number | null
@@ -199,6 +205,12 @@ export default function HistoryPage() {
                               <span className="text-slate-500">Hens:</span>
                               <span className="text-slate-200 font-mono">{tx.kTotalHens}</span>
                             </p>
+                            {tx.kFreeHen && tx.kFreeHen > 0 && (
+                              <p className="flex justify-between">
+                                <span className="text-purple-400">Free Hens:</span>
+                                <span className="text-purple-400 font-mono">{tx.kFreeHen}</span>
+                              </p>
+                            )}
                             <p className="flex justify-between">
                               <span className="text-slate-500">Rate:</span>
                               <span className="text-slate-200 font-mono">₹{tx.kRate}</span>
@@ -222,6 +234,12 @@ export default function HistoryPage() {
                               <span className="text-slate-500">Hens:</span>
                               <span className="text-slate-200 font-mono">{tx.nTotalHens}</span>
                             </p>
+                            {tx.nFreeHen && tx.nFreeHen > 0 && (
+                              <p className="flex justify-between">
+                                <span className="text-purple-400">Free Hens:</span>
+                                <span className="text-purple-400 font-mono">{tx.nFreeHen}</span>
+                              </p>
+                            )}
                             <p className="flex justify-between">
                               <span className="text-slate-500">Weight:</span>
                               <span className="text-slate-200 font-mono">{tx.nWeight} Kg</span>

@@ -13,7 +13,10 @@ interface Transaction {
   kHen1: number | null
   kBox2: number | null
   kHen2: number | null
+  kBox3: number | null
+  kHen3: number | null
   kTotalHens: number | null
+  kFreeHen: number | null
   kRate: number | null
   kAmount: number | null
   kLabour: number | null
@@ -22,7 +25,10 @@ interface Transaction {
   nHen1: number | null
   nBox2: number | null
   nHen2: number | null
+  nBox3: number | null
+  nHen3: number | null
   nTotalHens: number | null
+  nFreeHen: number | null
   nNetWeight: number | null
   nWaterWeight: number | null
   nWeight: number | null
@@ -54,8 +60,46 @@ export function BillDialog({ transaction, open, onClose }: BillDialogProps) {
     BOTH: 'Both Types',
   }[transaction.henType]
 
+  const hasRow1 = (transaction.kBox1 || 0) > 0 || (transaction.kHen1 || 0) > 0
+  const hasRow2 = (transaction.kBox2 || 0) > 0 || (transaction.kHen2 || 0) > 0
+  const hasRow3 = (transaction.kBox3 || 0) > 0 || (transaction.kHen3 || 0) > 0
+  const hasKFreeHen = (transaction.kFreeHen || 0) > 0
+
+  const hasNRow1 = (transaction.nBox1 || 0) > 0 || (transaction.nHen1 || 0) > 0
+  const hasNRow2 = (transaction.nBox2 || 0) > 0 || (transaction.nHen2 || 0) > 0
+  const hasNRow3 = (transaction.nBox3 || 0) > 0 || (transaction.nHen3 || 0) > 0
+  const hasNFreeHen = (transaction.nFreeHen || 0) > 0
+
   const formatRow = (box: number | null, hen: number | null) => {
     return `${box} Box x ${hen} Hen = ${(box || 0) * (hen || 0)}`
+  }
+
+  const renderRows = (tx: Transaction, type: 'k' | 'n') => {
+    const rows: string[] = []
+    
+    if (type === 'k') {
+      if ((tx.kBox1 || 0) > 0 || (tx.kHen1 || 0) > 0) {
+        rows.push(`Row 1: ${formatRow(tx.kBox1, tx.kHen1)}`)
+      }
+      if ((tx.kBox2 || 0) > 0 || (tx.kHen2 || 0) > 0) {
+        rows.push(`Row 2: ${formatRow(tx.kBox2, tx.kHen2)}`)
+      }
+      if ((tx.kBox3 || 0) > 0 || (tx.kHen3 || 0) > 0) {
+        rows.push(`Row 3: ${formatRow(tx.kBox3, tx.kHen3)}`)
+      }
+    } else {
+      if ((tx.nBox1 || 0) > 0 || (tx.nHen1 || 0) > 0) {
+        rows.push(`Row 1: ${formatRow(tx.nBox1, tx.nHen1)}`)
+      }
+      if ((tx.nBox2 || 0) > 0 || (tx.nHen2 || 0) > 0) {
+        rows.push(`Row 2: ${formatRow(tx.nBox2, tx.nHen2)}`)
+      }
+      if ((tx.nBox3 || 0) > 0 || (tx.nHen3 || 0) > 0) {
+        rows.push(`Row 3: ${formatRow(tx.nBox3, tx.nHen3)}`)
+      }
+    }
+    
+    return rows
   }
 
   const handleShare = () => {
@@ -67,8 +111,10 @@ ${henTypeLabel}
 `
 
     if (transaction.henType === 'KATTI_KOLI') {
-      content += `Row 1: ${formatRow(transaction.kBox1, transaction.kHen1)} | Row 2: ${formatRow(transaction.kBox2, transaction.kHen2)}
-Total Hens: ${transaction.kTotalHens}
+      const rows = renderRows(transaction, 'k')
+      if (rows.length > 0) content += rows.join(' | ') + '\n'
+      if (hasKFreeHen) content += `Free Hens: ${transaction.kFreeHen}\n`
+      content += `Total Hens: ${transaction.kTotalHens}
 Rate: Rs.${transaction.kRate}
 Amount: ${formatCurrency(transaction.kAmount || 0)} | Labour: ${formatCurrency(transaction.kLabour || 0)}
 Total Amount: ${formatCurrency(transaction.kTotal || 0)}
@@ -82,8 +128,10 @@ Old ${transaction.oldType}: ${formatCurrency(transaction.oldAmount)}
     }
 
     if (transaction.henType === 'NALLA_KOLI') {
-      content += `Row 1: ${formatRow(transaction.nBox1, transaction.nHen1)} | Row 2: ${formatRow(transaction.nBox2, transaction.nHen2)}
-Total Hens: ${transaction.nTotalHens}
+      const rows = renderRows(transaction, 'n')
+      if (rows.length > 0) content += rows.join(' | ') + '\n'
+      if (hasNFreeHen) content += `Free Hens: ${transaction.nFreeHen}\n`
+      content += `Total Hens: ${transaction.nTotalHens}
 Net Weight: ${transaction.nNetWeight} Kg
 Water Weight: ${transaction.nWaterWeight} Kg
 Weight: ${transaction.nWeight} Kg
@@ -100,16 +148,20 @@ Old ${transaction.oldType}: ${formatCurrency(transaction.oldAmount)}
     }
 
     if (transaction.henType === 'BOTH') {
-      content += `KATTI KOLI
-Row 1: ${formatRow(transaction.kBox1, transaction.kHen1)} | Row 2: ${formatRow(transaction.kBox2, transaction.kHen2)}
-Total Hens: ${transaction.kTotalHens}
+      content += `KATTI KOLI\n`
+      const kRows = renderRows(transaction, 'k')
+      if (kRows.length > 0) content += kRows.join(' | ') + '\n'
+      if (hasKFreeHen) content += `Free Hens: ${transaction.kFreeHen}\n`
+      content += `Total Hens: ${transaction.kTotalHens}
 Rate: Rs.${transaction.kRate}
 Amount: ${formatCurrency(transaction.kAmount || 0)} | Labour: ${formatCurrency(transaction.kLabour || 0)}
 Katti Total: ${formatCurrency(transaction.kTotal || 0)}
 
-NALLA KOLI
-Row 1: ${formatRow(transaction.nBox1, transaction.nHen1)} | Row 2: ${formatRow(transaction.nBox2, transaction.nHen2)}
-Total Hens: ${transaction.nTotalHens}
+NALLA KOLI\n`
+      const nRows = renderRows(transaction, 'n')
+      if (nRows.length > 0) content += nRows.join(' | ') + '\n'
+      if (hasNFreeHen) content += `Free Hens: ${transaction.nFreeHen}\n`
+      content += `Total Hens: ${transaction.nTotalHens}
 Net Weight: ${transaction.nNetWeight} Kg
 Water Weight: ${transaction.nWaterWeight} Kg
 Weight: ${transaction.nWeight} Kg
@@ -139,6 +191,93 @@ Old ${transaction.oldType}: ${formatCurrency(transaction.oldAmount)}
     alert('Bill copied to clipboard! You can now paste it into WhatsApp.')
   }
 
+  const renderKattiBill = () => {
+    const rows = []
+    if (hasRow1) rows.push(`Row 1: ${transaction.kBox1} Box x ${transaction.kHen1} Hen = ${(transaction.kBox1 || 0) * (transaction.kHen1 || 0)}`)
+    if (hasRow2) rows.push(`Row 2: ${transaction.kBox2} Box x ${transaction.kHen2} Hen = ${(transaction.kBox2 || 0) * (transaction.kHen2 || 0)}`)
+    if (hasRow3) rows.push(`Row 3: ${transaction.kBox3} Box x ${transaction.kHen3} Hen = ${(transaction.kBox3 || 0) * (transaction.kHen3 || 0)}`)
+    
+    return (
+      <div className="space-y-2 text-sm">
+        {rows.length > 0 && (
+          <div className="text-black font-semibold">{rows.join(' | ')}</div>
+        )}
+        {hasKFreeHen && (
+          <div className="text-black font-semibold">Free Hens: {transaction.kFreeHen}</div>
+        )}
+        <div className="text-black font-semibold">
+          Total Hens: {transaction.kTotalHens}
+        </div>
+        <div className="text-black font-semibold">
+          Rate: Rs.{transaction.kRate}
+        </div>
+        <div className="text-black font-semibold">
+          Amount: {formatCurrency(transaction.kAmount || 0)} | Labour: {formatCurrency(transaction.kLabour || 0)}
+        </div>
+        <div className="text-black font-bold border-t pt-2">
+          Total Amount: {formatCurrency(transaction.kTotal || 0)}
+        </div>
+        <div className="text-black font-semibold">
+          Paid: {formatCurrency(transaction.paidAmount)}
+        </div>
+        <div className="text-black font-semibold">
+          {transaction.todayType === 'BALANCE' ? 'Balance' : 'Extra'}: {formatCurrency(transaction.todayAmount)}
+        </div>
+        <div className="text-black font-semibold">
+          Old {transaction.oldType}: {formatCurrency(transaction.oldAmount)}
+        </div>
+      </div>
+    )
+  }
+
+  const renderNallaBill = () => {
+    const rows = []
+    if (hasNRow1) rows.push(`Row 1: ${transaction.nBox1} Box x ${transaction.nHen1} Hen = ${(transaction.nBox1 || 0) * (transaction.nHen1 || 0)}`)
+    if (hasNRow2) rows.push(`Row 2: ${transaction.nBox2} Box x ${transaction.nHen2} Hen = ${(transaction.nBox2 || 0) * (transaction.nHen2 || 0)}`)
+    if (hasNRow3) rows.push(`Row 3: ${transaction.nBox3} Box x ${transaction.nHen3} Hen = ${(transaction.nBox3 || 0) * (transaction.nHen3 || 0)}`)
+    
+    return (
+      <div className="space-y-2 text-sm">
+        {rows.length > 0 && (
+          <div className="text-black font-semibold">{rows.join(' | ')}</div>
+        )}
+        {hasNFreeHen && (
+          <div className="text-black font-semibold">Free Hens: {transaction.nFreeHen}</div>
+        )}
+        <div className="text-black font-semibold">
+          Total Hens: {transaction.nTotalHens}
+        </div>
+        <div className="text-black font-semibold">
+          Net Weight: {transaction.nNetWeight} Kg
+        </div>
+        <div className="text-black font-semibold">
+          Water Weight: {transaction.nWaterWeight} Kg
+        </div>
+        <div className="text-black font-semibold">
+          Weight: {transaction.nWeight} Kg
+        </div>
+        <div className="text-black font-semibold">
+          Rate: Rs.{transaction.nRate}
+        </div>
+        <div className="text-black font-semibold">
+          Amount: {formatCurrency(transaction.nAmount || 0)} | Labour: {formatCurrency(transaction.nLabour || 0)}
+        </div>
+        <div className="text-black font-bold border-t pt-2">
+          Total Amount: {formatCurrency(transaction.totalAmount)}
+        </div>
+        <div className="text-black font-semibold">
+          Paid: {formatCurrency(transaction.paidAmount)}
+        </div>
+        <div className="text-black font-semibold">
+          {transaction.todayType === 'BALANCE' ? 'Balance' : 'Extra'}: {formatCurrency(transaction.todayAmount)}
+        </div>
+        <div className="text-black font-semibold">
+          Old {transaction.oldType}: {formatCurrency(transaction.oldAmount)}
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg max-w-xl w-full max-h-[90vh] overflow-y-auto">
@@ -149,136 +288,20 @@ Old ${transaction.oldType}: ${formatCurrency(transaction.oldAmount)}
             <p className="text-black font-medium">Date: {format(new Date(transaction.date), 'dd/MM/yyyy')}</p>
           </div>
 
-          {transaction.henType === 'KATTI_KOLI' && (
-            <div className="space-y-2 text-sm">
-              <div className="text-black font-semibold">
-                Row 1: {transaction.kBox1} Box x {transaction.kHen1} Hen = {(transaction.kBox1 || 0) * (transaction.kHen1 || 0)} | Row 2: {transaction.kBox2} Box x {transaction.kHen2} Hen = {(transaction.kBox2 || 0) * (transaction.kHen2 || 0)}
-              </div>
-              <div className="text-black font-semibold">
-                Total Hens: {transaction.kTotalHens}
-              </div>
-              <div className="text-black font-semibold">
-                Rate: Rs.{transaction.kRate}
-              </div>
-              <div className="text-black font-semibold">
-                Amount: {formatCurrency(transaction.kAmount || 0)} | Labour: {formatCurrency(transaction.kLabour || 0)}
-              </div>
-              <div className="text-black font-bold border-t pt-2">
-                Total Amount: {formatCurrency(transaction.kTotal || 0)}
-              </div>
-              <div className="text-black font-semibold">
-                Paid: {formatCurrency(transaction.paidAmount)}
-              </div>
-              <div className="text-black font-semibold">
-                {transaction.todayType === 'BALANCE' ? 'Balance' : 'Extra'}: {formatCurrency(transaction.todayAmount)}
-              </div>
-              <div className="text-black font-semibold">
-                Old {transaction.oldType}: {formatCurrency(transaction.oldAmount)}
-              </div>
-            </div>
-          )}
+          {transaction.henType === 'KATTI_KOLI' && renderKattiBill()}
 
-          {transaction.henType === 'NALLA_KOLI' && (
-            <div className="space-y-2 text-sm">
-              <div className="text-black font-semibold">
-                Row 1: {transaction.nBox1} Box x {transaction.nHen1} Hen = {(transaction.nBox1 || 0) * (transaction.nHen1 || 0)} | Row 2: {transaction.nBox2} Box x {transaction.nHen2} Hen = {(transaction.nBox2 || 0) * (transaction.nHen2 || 0)}
-              </div>
-              <div className="text-black font-semibold">
-                Total Hens: {transaction.nTotalHens}
-              </div>
-              <div className="text-black font-semibold">
-                Net Weight: {transaction.nNetWeight} Kg
-              </div>
-              <div className="text-black font-semibold">
-                Water Weight: {transaction.nWaterWeight} Kg
-              </div>
-              <div className="text-black font-semibold">
-                Weight: {transaction.nWeight} Kg
-              </div>
-              <div className="text-black font-semibold">
-                Rate: Rs.{transaction.nRate}
-              </div>
-              <div className="text-black font-semibold">
-                Amount: {formatCurrency(transaction.nAmount || 0)} | Labour: {formatCurrency(transaction.nLabour || 0)}
-              </div>
-              <div className="text-black font-bold border-t pt-2">
-                Total Amount: {formatCurrency(transaction.totalAmount)}
-              </div>
-              <div className="text-black font-semibold">
-                Paid: {formatCurrency(transaction.paidAmount)}
-              </div>
-              <div className="text-black font-semibold">
-                {transaction.todayType === 'BALANCE' ? 'Balance' : 'Extra'}: {formatCurrency(transaction.todayAmount)}
-              </div>
-              <div className="text-black font-semibold">
-                Old {transaction.oldType}: {formatCurrency(transaction.oldAmount)}
-              </div>
-            </div>
-          )}
+          {transaction.henType === 'NALLA_KOLI' && renderNallaBill()}
 
           {transaction.henType === 'BOTH' && (
             <div className="space-y-4">
               <div>
                 <h2 className="text-lg font-bold border-b pb-2 mb-3 text-black">KATTI KOLI</h2>
-                <div className="space-y-2 text-sm">
-                  <div className="text-black font-semibold">
-                    Row 1: {transaction.kBox1} Box x {transaction.kHen1} Hen = {(transaction.kBox1 || 0) * (transaction.kHen1 || 0)} | Row 2: {transaction.kBox2} Box x {transaction.kHen2} Hen = {(transaction.kBox2 || 0) * (transaction.kHen2 || 0)}
-                  </div>
-                  <div className="text-black font-semibold">
-                    Total Hens: {transaction.kTotalHens}
-                  </div>
-                  <div className="text-black font-semibold">
-                    Rate: Rs.{transaction.kRate}
-                  </div>
-                  <div className="text-black font-semibold">
-                    Amount: {formatCurrency(transaction.kAmount || 0)} | Labour: {formatCurrency(transaction.kLabour || 0)}
-                  </div>
-                  <div className="text-black font-bold">
-                    Katti Total: {formatCurrency(transaction.kTotal || 0)}
-                  </div>
-                </div>
+                {renderKattiBill()}
               </div>
 
               <div>
                 <h2 className="text-lg font-bold border-b pb-2 mb-3 text-black">NALLA KOLI</h2>
-                <div className="space-y-2 text-sm">
-                  <div className="text-black font-semibold">
-                    Row 1: {transaction.nBox1} Box x {transaction.nHen1} Hen = {(transaction.nBox1 || 0) * (transaction.nHen1 || 0)} | Row 2: {transaction.nBox2} Box x {transaction.nHen2} Hen = {(transaction.nBox2 || 0) * (transaction.nHen2 || 0)}
-                  </div>
-                  <div className="text-black font-semibold">
-                    Total Hens: {transaction.nTotalHens}
-                  </div>
-                  <div className="text-black font-semibold">
-                    Net Weight: {transaction.nNetWeight} Kg
-                  </div>
-                  <div className="text-black font-semibold">
-                    Water Weight: {transaction.nWaterWeight} Kg
-                  </div>
-                  <div className="text-black font-semibold">
-                    Weight: {transaction.nWeight} Kg
-                  </div>
-                  <div className="text-black font-semibold">
-                    Rate: Rs.{transaction.nRate}
-                  </div>
-                  <div className="text-black font-semibold">
-                    Amount: {formatCurrency(transaction.nAmount || 0)} | Labour: {formatCurrency(transaction.nLabour || 0)}
-                  </div>
-                </div>
-              </div>
-
-              <div className="border-t-2 border-black pt-4 space-y-2 text-sm">
-                <div className="text-black font-bold">
-                  Total Amount: {formatCurrency(transaction.totalAmount)}
-                </div>
-                <div className="text-black font-semibold">
-                  Paid: {formatCurrency(transaction.paidAmount)}
-                </div>
-                <div className="text-black font-semibold">
-                  {transaction.todayType === 'BALANCE' ? 'Balance' : 'Extra'}: {formatCurrency(transaction.todayAmount)}
-                </div>
-                <div className="text-black font-semibold">
-                  Old {transaction.oldType}: {formatCurrency(transaction.oldAmount)}
-                </div>
+                {renderNallaBill()}
               </div>
             </div>
           )}

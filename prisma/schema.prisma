@@ -24,7 +24,10 @@ model Transaction {
   kHen1      Int?
   kBox2      Int?
   kHen2      Int?
+  kBox3      Int?
+  kHen3      Int?
   kTotalHens Int?
+  kFreeHen   Int?
   kRate      Float?
   kAmount    Float?
   kLabour    Float?
@@ -35,7 +38,10 @@ model Transaction {
   nHen1        Int?
   nBox2        Int?
   nHen2        Int?
+  nBox3        Int?
+  nHen3        Int?
   nTotalHens   Int?
+  nFreeHen     Int?
   nNetWeight   Float?
   nWaterWeight Float?
   nWeight      Float?
