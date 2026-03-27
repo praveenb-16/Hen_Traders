@@ -4,7 +4,10 @@ import { prisma } from '@/lib/prisma'
 export async function GET() {
   try {
     const latestTransaction = await prisma.transaction.findFirst({
-      orderBy: { date: 'desc' },
+      orderBy: [
+        { date: 'desc' },
+        { createdAt: 'desc' }
+      ],
       select: {
         finalAmount: true,
         finalType: true,
