@@ -164,6 +164,7 @@ Water Weight: ${transaction.nWaterWeight} Kg
 Weight: ${transaction.nWeight} Kg
 Rate: Rs.${transaction.nRate}
 Amount: ${formatCurrency(transaction.nAmount || 0)}
+Labour: ${formatCurrency(transaction.nLabour || 0)}
 Total Amount: ${formatCurrency(transaction.totalAmount)}
 ------------------------------
 Paid: ${formatCurrency(transaction.paidAmount)}
@@ -196,6 +197,7 @@ Water Weight: ${transaction.nWaterWeight} Kg
 Weight: ${transaction.nWeight} Kg
 Rate: Rs.${transaction.nRate}
 Amount: ${formatCurrency(transaction.nAmount || 0)}
+Labour: ${formatCurrency(transaction.nLabour || 0)}
 ==============================
 
 Total Amount: ${formatCurrency(transaction.totalAmount)}
@@ -244,10 +246,13 @@ Old ${transaction.oldType}: ${formatCurrency(transaction.oldAmount)}
           Amount: {formatCurrency(transaction.kAmount || 0)}
         </div>
         <div className="text-black font-semibold">
-          Labour: {formatCurrency(transaction.kLabour || 0)}
+          Amount: {formatCurrency(transaction.nAmount || 0)}
+        </div>
+        <div className="text-black font-semibold">
+          Labour: {formatCurrency(transaction.nLabour || 0)}
         </div>
         <div className="text-black font-bold border-t pt-2">
-          Total Amount: {formatCurrency(transaction.kTotal || 0)}
+          Total Amount: {formatCurrency(transaction.totalAmount)}
         </div>
       </div>
     )
