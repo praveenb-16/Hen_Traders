@@ -121,7 +121,7 @@ export function BillDialog({ transaction, open, onClose }: BillDialogProps) {
       <div className="flex justify-between font-bold text-lg">
         <span className="text-black">Final {transaction.finalType}:</span>
         <span className={transaction.finalType === 'BALANCE' ? 'text-green-700 font-bold' : 'text-red-600 font-bold'}>
-          {formatCurrency(transaction.finalAmount)}
+          {transaction.finalAmount}
         </span>
       </div>
     </div>
@@ -163,7 +163,7 @@ Net Weight: ${transaction.nNetWeight} Kg
 Water Weight: ${transaction.nWaterWeight} Kg
 Weight: ${transaction.nWeight} Kg
 Rate: Rs.${transaction.nRate}
-Amount: ${formatCurrency(transaction.nAmount || 0)}
+Amount: ${transaction.nAmount || 0}
 Labour: ${formatCurrency(transaction.nLabour || 0)}
 Total Amount: ${formatCurrency(transaction.totalAmount)}
 ------------------------------
@@ -196,7 +196,7 @@ Net Weight: ${transaction.nNetWeight} Kg
 Water Weight: ${transaction.nWaterWeight} Kg
 Weight: ${transaction.nWeight} Kg
 Rate: Rs.${transaction.nRate}
-Amount: ${formatCurrency(transaction.nAmount || 0)}
+Amount: ${transaction.nAmount || 0}
 Labour: ${formatCurrency(transaction.nLabour || 0)}
 ==============================
 
@@ -210,7 +210,7 @@ Old ${transaction.oldType}: ${formatCurrency(transaction.oldAmount)}
 `
     }
 
-    content += `Final ${transaction.finalType}: ${formatCurrency(transaction.finalAmount)}`
+    content += `Final ${transaction.finalType}: ${transaction.finalAmount}`
 
     const textarea = document.createElement('textarea')
     textarea.value = content
@@ -246,13 +246,10 @@ Old ${transaction.oldType}: ${formatCurrency(transaction.oldAmount)}
           Amount: {formatCurrency(transaction.kAmount || 0)}
         </div>
         <div className="text-black font-semibold">
-          Amount: {formatCurrency(transaction.nAmount || 0)}
-        </div>
-        <div className="text-black font-semibold">
-          Labour: {formatCurrency(transaction.nLabour || 0)}
+          Labour: {formatCurrency(transaction.kLabour || 0)}
         </div>
         <div className="text-black font-bold border-t pt-2">
-          Total Amount: {formatCurrency(transaction.totalAmount)}
+          Total Amount: {formatCurrency(transaction.kTotal || 0)}
         </div>
       </div>
     )
@@ -288,7 +285,10 @@ Old ${transaction.oldType}: ${formatCurrency(transaction.oldAmount)}
           Rate: Rs.{transaction.nRate}
         </div>
         <div className="text-black font-semibold">
-          Amount: {formatCurrency(transaction.nAmount || 0)}
+          Amount: {transaction.nAmount || 0}
+        </div>
+        <div className="text-black font-semibold">
+          Labour: {formatCurrency(transaction.nLabour || 0)}
         </div>
         <div className="text-black font-bold border-t pt-2">
           Total Amount: {formatCurrency(transaction.totalAmount)}
