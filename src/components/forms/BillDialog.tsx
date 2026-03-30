@@ -101,7 +101,7 @@ ${henTypeLabel}
       if (rows.length > 0) content += rows.join(' | ') + '\n'
       if (hasKFreeHen) content += `Free Hens: ${transaction.kFreeHen}\n`
       content += `Total Hens: ${transaction.kTotalHens}
-Rate: Rs.${transaction.kRate}
+Rate: ₹${transaction.kRate}
 Amount: ${formatCurrency(transaction.kAmount || 0)}
 Labour: ${formatCurrency(transaction.kLabour || 0)}
 Total Amount: ${formatCurrency(transaction.kTotal || 0)}
@@ -123,7 +123,7 @@ Old ${transaction.oldType}: ${formatCurrency(transaction.oldAmount)}
 Net Weight: ${transaction.nNetWeight} Kg
 Water Weight: ${transaction.nWaterWeight} Kg
 Weight: ${transaction.nWeight} Kg
-Rate: Rs.${transaction.nRate}
+Rate: ₹${transaction.nRate}
 Amount: ${formatCurrency(transaction.nAmount || 0)}
 Labour: ${formatCurrency(transaction.nLabour || 0)}
 Total Amount: ${formatCurrency(transaction.totalAmount)}
@@ -143,7 +143,7 @@ Old ${transaction.oldType}: ${formatCurrency(transaction.oldAmount)}
       if (kRows.length > 0) content += kRows.join(' | ') + '\n'
       if (hasKFreeHen) content += `Free Hens: ${transaction.kFreeHen}\n`
       content += `Total Hens: ${transaction.kTotalHens}
-Rate: Rs.${transaction.kRate}
+Rate: ₹${transaction.kRate}
 Amount: ${formatCurrency(transaction.kAmount || 0)}
 Labour: ${formatCurrency(transaction.kLabour || 0)}
 Katti Total: ${formatCurrency(transaction.kTotal || 0)}
@@ -156,7 +156,7 @@ NALLA KOLI\n`
 Net Weight: ${transaction.nNetWeight} Kg
 Water Weight: ${transaction.nWaterWeight} Kg
 Weight: ${transaction.nWeight} Kg
-Rate: Rs.${transaction.nRate}
+Rate: ₹${transaction.nRate}
 Amount: ${formatCurrency(transaction.nAmount || 0)}
 Labour: ${formatCurrency(transaction.nLabour || 0)}
 ==============================
@@ -205,7 +205,7 @@ Old ${transaction.oldType}: ${formatCurrency(transaction.oldAmount)}
           Total Hens: {transaction.kTotalHens}
         </div>
         <div className="text-black font-semibold">
-          Rate: Rs.{transaction.kRate}
+          Rate: ₹{transaction.kRate}
         </div>
         <div className="text-black font-semibold">
           Amount: {formatCurrency(transaction.kAmount || 0)}
@@ -247,7 +247,7 @@ Old ${transaction.oldType}: ${formatCurrency(transaction.oldAmount)}
           Weight: {transaction.nWeight} Kg
         </div>
         <div className="text-black font-semibold">
-          Rate: Rs.{transaction.nRate}
+          Rate: ₹{transaction.nRate}
         </div>
         <div className="text-black font-semibold">
           Amount: {formatCurrency(transaction.nAmount || 0)}
