@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
@@ -73,12 +73,15 @@ export function BothForm({ onSubmit, lastRates, initialOldAmount = 0, initialOld
   const [nNetWeight, setNNetWeight] = useState(0)
   const [nWaterWeight, setNWaterWeight] = useState(0)
   const [nRate, setNRate] = useState(lastRates?.nRate || 68)
-  
+
   const [paidAmount, setPaidAmount] = useState(0)
   const [oldAmount, setOldAmount] = useState(initialOldAmount)
   const [oldType, setOldType] = useState<DiffType>(initialOldType)
   const [finalType, setFinalType] = useState<DiffType>('BALANCE')
   const [finalAmount, setFinalAmount] = useState(0)
+
+  const onSubmitRef = useRef(onSubmit)
+  onSubmitRef.current = onSubmit
 
   const kTotalHens = kBox1 * kHen1 + kBox2 * kHen2 + kBox3 * kHen3
   const kAmount = kTotalHens * kRate
@@ -87,7 +90,6 @@ export function BothForm({ onSubmit, lastRates, initialOldAmount = 0, initialOld
   const nTotalHens = nBox1 * nHen1 + nBox2 * nHen2 + nBox3 * nHen3
   const nWeight = nNetWeight - nWaterWeight
   const nAmount = nWeight * nRate
-
   const totalAmount = kTotal + nAmount
 
   useEffect(() => {
@@ -107,7 +109,6 @@ export function BothForm({ onSubmit, lastRates, initialOldAmount = 0, initialOld
     }
   }, [lastRates?.nRate])
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const submitData: BothFormData = {
       henType: 'BOTH',
@@ -145,8 +146,8 @@ export function BothForm({ onSubmit, lastRates, initialOldAmount = 0, initialOld
       finalType,
       finalAmount,
     }
-    onSubmit(submitData)
-  }, [kBox1, kHen1, kBox2, kHen2, kBox3, kHen3, kFreeHen, kRate, kLabour, nBox1, nHen1, nBox2, nHen2, nBox3, nHen3, nFreeHen, nNetWeight, nWaterWeight, nRate, paidAmount, oldAmount, oldType, finalType, finalAmount])
+    onSubmitRef.current(submitData)
+  }, [kBox1, kHen1, kBox2, kHen2, kBox3, kHen3, kTotalHens, kFreeHen, kRate, kAmount, kLabour, kTotal, nBox1, nHen1, nBox2, nHen2, nBox3, nHen3, nTotalHens, nFreeHen, nNetWeight, nWaterWeight, nWeight, nRate, nAmount, paidAmount, oldAmount, oldType, finalType, finalAmount, totalAmount])
 
   const handleFinalChange = (type: DiffType, amount: number) => {
     setFinalType(type)

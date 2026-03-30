@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
@@ -55,6 +55,9 @@ export function KattiKoliForm({ onSubmit, lastRates, initialOldAmount = 0, initi
   const [finalType, setFinalType] = useState<DiffType>('BALANCE')
   const [finalAmount, setFinalAmount] = useState(0)
 
+  const onSubmitRef = useRef(onSubmit)
+  onSubmitRef.current = onSubmit
+
   const kTotalHens = kBox1 * kHen1 + kBox2 * kHen2 + kBox3 * kHen3
   const kAmount = kTotalHens * kRate
   const kTotal = kAmount + kLabour
@@ -70,7 +73,6 @@ export function KattiKoliForm({ onSubmit, lastRates, initialOldAmount = 0, initi
     }
   }, [lastRates?.kRate])
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const submitData: KattiFormData = {
       henType: 'KATTI_KOLI',
@@ -95,8 +97,8 @@ export function KattiKoliForm({ onSubmit, lastRates, initialOldAmount = 0, initi
       finalType,
       finalAmount,
     }
-    onSubmit(submitData)
-  }, [kBox1, kHen1, kBox2, kHen2, kBox3, kHen3, kFreeHen, kRate, kLabour, paidAmount, oldAmount, oldType, finalType, finalAmount])
+    onSubmitRef.current(submitData)
+  }, [kBox1, kHen1, kBox2, kHen2, kBox3, kHen3, kTotalHens, kFreeHen, kRate, kAmount, kLabour, kTotal, paidAmount, oldAmount, oldType, finalType, finalAmount])
 
   const handleFinalChange = (type: DiffType, amount: number) => {
     setFinalType(type)

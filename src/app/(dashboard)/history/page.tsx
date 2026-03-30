@@ -6,48 +6,9 @@ import { format } from 'date-fns'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { BillDialog } from '@/components/forms/BillDialog'
-import { formatCurrency, type DiffType } from '@/lib/calculations'
+import { formatCurrency } from '@/lib/calculations'
+import type { TransactionData } from '@/lib/types'
 import { ChevronDown, ChevronUp, Receipt, Plus } from 'lucide-react'
-
-interface Transaction {
-  id: string
-  date: string
-  henType: 'KATTI_KOLI' | 'NALLA_KOLI' | 'BOTH'
-  kBox1: number | null
-  kHen1: number | null
-  kBox2: number | null
-  kHen2: number | null
-  kBox3: number | null
-  kHen3: number | null
-  kTotalHens: number | null
-  kFreeHen: number | null
-  kRate: number | null
-  kAmount: number | null
-  kLabour: number | null
-  kTotal: number | null
-  nBox1: number | null
-  nHen1: number | null
-  nBox2: number | null
-  nHen2: number | null
-  nBox3: number | null
-  nHen3: number | null
-  nTotalHens: number | null
-  nFreeHen: number | null
-  nNetWeight: number | null
-  nWaterWeight: number | null
-  nWeight: number | null
-  nRate: number | null
-  nAmount: number | null
-  nLabour: number | null
-  totalAmount: number
-  paidAmount: number
-  todayType: DiffType
-  todayAmount: number
-  oldAmount: number
-  oldType: DiffType
-  finalType: DiffType
-  finalAmount: number
-}
 
 const henTypeLabels: Record<string, string> = {
   KATTI_KOLI: 'கட்டி கோழி / Katti Koli',
@@ -64,10 +25,10 @@ const henTypeColors: Record<string, string> = {
 export default function HistoryPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const [transactions, setTransactions] = useState<Transaction[]>([])
+  const [transactions, setTransactions] = useState<TransactionData[]>([])
   const [loading, setLoading] = useState(true)
   const [expandedId, setExpandedId] = useState<string | null>(null)
-  const [billTransaction, setBillTransaction] = useState<Transaction | null>(null)
+  const [billTransaction, setBillTransaction] = useState<TransactionData | null>(null)
   const success = searchParams.get('success')
 
   useEffect(() => {

@@ -2,51 +2,12 @@
 
 import { format } from 'date-fns'
 import { Button } from '@/components/ui/button'
-import { formatCurrency, type DiffType } from '@/lib/calculations'
+import { formatCurrency } from '@/lib/calculations'
+import type { TransactionData } from '@/lib/types'
 import { Printer, Share2, X } from 'lucide-react'
 
-interface Transaction {
-  id: string
-  date: string
-  henType: 'KATTI_KOLI' | 'NALLA_KOLI' | 'BOTH'
-  kBox1: number | null
-  kHen1: number | null
-  kBox2: number | null
-  kHen2: number | null
-  kBox3: number | null
-  kHen3: number | null
-  kTotalHens: number | null
-  kFreeHen: number | null
-  kRate: number | null
-  kAmount: number | null
-  kLabour: number | null
-  kTotal: number | null
-  nBox1: number | null
-  nHen1: number | null
-  nBox2: number | null
-  nHen2: number | null
-  nBox3: number | null
-  nHen3: number | null
-  nTotalHens: number | null
-  nFreeHen: number | null
-  nNetWeight: number | null
-  nWaterWeight: number | null
-  nWeight: number | null
-  nRate: number | null
-  nAmount: number | null
-  nLabour: number | null
-  totalAmount: number
-  paidAmount: number
-  todayType: DiffType
-  todayAmount: number
-  oldAmount: number
-  oldType: DiffType
-  finalType: DiffType
-  finalAmount: number
-}
-
 interface BillDialogProps {
-  transaction: Transaction
+  transaction: TransactionData
   open: boolean
   onClose: () => void
 }
@@ -74,7 +35,7 @@ export function BillDialog({ transaction, open, onClose }: BillDialogProps) {
     return `${box} Box x ${hen} Hen = ${(box || 0) * (hen || 0)}`
   }
 
-  const renderRows = (tx: Transaction, type: 'k' | 'n') => {
+  const renderRows = (tx: TransactionData, type: 'k' | 'n') => {
     const rows: string[] = []
     
     if (type === 'k') {
@@ -121,13 +82,13 @@ export function BillDialog({ transaction, open, onClose }: BillDialogProps) {
       <div className="flex justify-between font-bold text-lg">
         <span className="text-black">Final {transaction.finalType}:</span>
         <span className={transaction.finalType === 'BALANCE' ? 'text-green-700 font-bold' : 'text-red-600 font-bold'}>
-          {transaction.finalAmount}
+          {formatCurrency(transaction.finalAmount)}
         </span>
       </div>
     </div>
   )
 
-  const handleShare = () => {
+  const handleShare = async () => {
     let content = `Balamurugan Traders
 Date: ${format(new Date(transaction.date), 'dd/MM/yyyy')}
 ${henTypeLabel}
@@ -212,14 +173,18 @@ Old ${transaction.oldType}: ${formatCurrency(transaction.oldAmount)}
 
     content += `Final ${transaction.finalType}: ${transaction.finalAmount}`
 
-    const textarea = document.createElement('textarea')
-    textarea.value = content
-    document.body.appendChild(textarea)
-    textarea.select()
-    document.execCommand('copy')
-    document.body.removeChild(textarea)
-    
-    alert('Bill copied to clipboard! You can now paste it into WhatsApp.')
+    try {
+      await navigator.clipboard.writeText(content)
+      alert('Bill copied to clipboard! You can now paste it into WhatsApp.')
+    } catch {
+      const textarea = document.createElement('textarea')
+      textarea.value = content
+      document.body.appendChild(textarea)
+      textarea.select()
+      document.execCommand('copy')
+      document.body.removeChild(textarea)
+      alert('Bill copied to clipboard! You can now paste it into WhatsApp.')
+    }
   }
 
   const renderKattiBill = () => {

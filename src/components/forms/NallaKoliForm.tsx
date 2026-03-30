@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
@@ -59,6 +59,9 @@ export function NallaKoliForm({ onSubmit, lastRates, initialOldAmount = 0, initi
   const [finalType, setFinalType] = useState<DiffType>('BALANCE')
   const [finalAmount, setFinalAmount] = useState(0)
 
+  const onSubmitRef = useRef(onSubmit)
+  onSubmitRef.current = onSubmit
+
   const nTotalHens = nBox1 * nHen1 + nBox2 * nHen2 + nBox3 * nHen3
   const nWeight = nNetWeight - nWaterWeight
   const nAmount = nWeight * nRate
@@ -75,7 +78,6 @@ export function NallaKoliForm({ onSubmit, lastRates, initialOldAmount = 0, initi
     }
   }, [lastRates?.nRate])
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const submitData: NallaFormData = {
       henType: 'NALLA_KOLI',
@@ -102,8 +104,8 @@ export function NallaKoliForm({ onSubmit, lastRates, initialOldAmount = 0, initi
       finalType,
       finalAmount,
     }
-    onSubmit(submitData)
-  }, [nBox1, nHen1, nBox2, nHen2, nBox3, nHen3, nFreeHen, nNetWeight, nWaterWeight, nRate, nLabour, paidAmount, oldAmount, oldType, finalType, finalAmount])
+    onSubmitRef.current(submitData)
+  }, [nBox1, nHen1, nBox2, nHen2, nBox3, nHen3, nTotalHens, nFreeHen, nNetWeight, nWaterWeight, nWeight, nRate, nAmount, nTotal, nLabour, paidAmount, oldAmount, oldType, finalType, finalAmount])
 
   const handleFinalChange = (type: DiffType, amount: number) => {
     setFinalType(type)
