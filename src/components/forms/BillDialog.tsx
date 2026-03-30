@@ -124,7 +124,7 @@ Net Weight: ${transaction.nNetWeight} Kg
 Water Weight: ${transaction.nWaterWeight} Kg
 Weight: ${transaction.nWeight} Kg
 Rate: Rs.${transaction.nRate}
-Amount: ${transaction.nAmount || 0}
+Amount: ${formatCurrency(transaction.nAmount || 0)}
 Labour: ${formatCurrency(transaction.nLabour || 0)}
 Total Amount: ${formatCurrency(transaction.totalAmount)}
 ------------------------------
@@ -157,7 +157,7 @@ Net Weight: ${transaction.nNetWeight} Kg
 Water Weight: ${transaction.nWaterWeight} Kg
 Weight: ${transaction.nWeight} Kg
 Rate: Rs.${transaction.nRate}
-Amount: ${transaction.nAmount || 0}
+Amount: ${formatCurrency(transaction.nAmount || 0)}
 Labour: ${formatCurrency(transaction.nLabour || 0)}
 ==============================
 
@@ -171,7 +171,7 @@ Old ${transaction.oldType}: ${formatCurrency(transaction.oldAmount)}
 `
     }
 
-    content += `Final ${transaction.finalType}: ${transaction.finalAmount}`
+    content += `Final ${transaction.finalType}: ${formatCurrency(transaction.finalAmount)}`
 
     try {
       await navigator.clipboard.writeText(content)
@@ -250,7 +250,7 @@ Old ${transaction.oldType}: ${formatCurrency(transaction.oldAmount)}
           Rate: Rs.{transaction.nRate}
         </div>
         <div className="text-black font-semibold">
-          Amount: {transaction.nAmount || 0}
+          Amount: {formatCurrency(transaction.nAmount || 0)}
         </div>
         <div className="text-black font-semibold">
           Labour: {formatCurrency(transaction.nLabour || 0)}
